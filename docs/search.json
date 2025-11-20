@@ -1,0 +1,520 @@
+[
+  {
+    "objectID": "other/web_scraping/web scrap.html",
+    "href": "other/web_scraping/web scrap.html",
+    "title": "Web Scraping with Python",
+    "section": "",
+    "text": "Web scraping is the process of automatically extracting data from websites. Python is one of the most popular languages for web scraping due to its powerful libraries and simple syntax.\n\n\n\nBasic concepts of web scraping\nUsing popular Python libraries: requests, BeautifulSoup, Selenium\nBest practices and ethical considerations\nReal-world examples\n\n\n\n\nMake sure you have these libraries installed:\n\n\nCode\npip install requests beautifulsoup4 selenium pandas lxml\n\n\n\n\n\n\n\n\nLibrary\nPurpose\nBest For\n\n\n\n\nrequests\nHTTP requests\nSimple static websites\n\n\nBeautifulSoup\nHTML parsing\nParsing and extracting data\n\n\nSelenium\nBrowser automation\nDynamic/JavaScript websites\n\n\npandas\nData manipulation\nOrganizing scraped data\n\n\n\n\n\n\n\nThe requests library is the foundation for most web scraping tasks.\n\n\nCode\nimport requests\nfrom bs4 import BeautifulSoup\nimport pandas as pd\n\n# Basic GET request\nurl = \"http://books.toscrape.com/\"\nresponse = requests.get(url)\n\n# Check if request was successful\nif response.status_code == 200:\n    print(\"Successfully fetched the page!\")\n    html_content = response.text\nelse:\n    print(f\"Error: {response.status_code}\")\n\n\nSuccessfully fetched the page!\n\n\n\n\nAlways set proper headers to mimic a real browser:\n\n\nCode\nheaders = {\n    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'\n}\n\nresponse = requests.get(url, headers=headers)\n\n\n\n\n\n\n\nBeautifulSoup makes it easy to navigate and extract data from HTML.\n\n\nCode\nfrom bs4 import BeautifulSoup\n\n# Create BeautifulSoup object\nsoup = BeautifulSoup(html_content, 'html.parser')\n\n# Find book titles\nbook_titles = soup.find_all('h3')\n\n# Find book prices\nbook_prices = soup.find_all('p', class_='price_color')\n\n# Find all book containers\nbooks = soup.find_all('article', class_='product_pod')\n\n# Extract book information\nfor book in books[:3]:  # Show first 3 books as example\n    title = book.h3.a['title']\n    price = book.find('p', class_='price_color').text\n    print(f\"Title: {title}, Price: {price}\")\n\n\nTitle: A Light in the Attic, Price: Â£51.77\nTitle: Tipping the Velvet, Price: Â£53.74\nTitle: Soumission, Price: Â£50.10\n\n\n\n\n\n\nCode\n# CSS selectors for books\nbooks = soup.select('.product_pod')\n\n# Complex selectors for prices\nprices = soup.select('p.price_color')\n\n# Get parent/children elements - fix the iteration\nfor price in prices[:5]:  # Just use 5 price as example\n    book_container = price.find_parent('article', class_='product_pod')\n    print(f\"Found parent container: {book_container.h3.a['title']}\")\n\n\nFound parent container: A Light in the Attic\nFound parent container: Tipping the Velvet\nFound parent container: Soumission\nFound parent container: Sharp Objects\nFound parent container: Sapiens: A Brief History of Humankind\n\n\n\n\n\n\n\n\n\nCode\nimport requests\nfrom bs4 import BeautifulSoup\nimport pandas as pd\n\ndef scrape_books(url):\n    \"\"\"Scrape book information from a bookstore website\"\"\"\n\n    headers = {\n        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'\n    }\n\n    response = requests.get(url, headers=headers)\n    soup = BeautifulSoup(response.content, 'html.parser')\n\n    books_data = []\n\n    # Find all book containers\n    books = soup.find_all('article', class_='product_pod')\n\n    for book in books:\n        title = book.h3.a['title']\n        price = book.find('p', class_='price_color').text\n        stock = book.find('p', class_='instock availability').text.strip()\n        rating = book.p['class'][1]  # Second class contains rating\n\n        books_data.append({\n            'title': title,\n            'price': price,\n            'stock': stock,\n            'rating': rating\n        })\n\n    return pd.DataFrame(books_data)\n\n# Example usage\nbooks_df = scrape_books('http://books.toscrape.com/')\nprint(books_df.head())\n\n\n                                   title   price     stock rating\n0                   A Light in the Attic  £51.77  In stock  Three\n1                     Tipping the Velvet  £53.74  In stock    One\n2                             Soumission  £50.10  In stock    One\n3                          Sharp Objects  £47.82  In stock   Four\n4  Sapiens: A Brief History of Humankind  £54.23  In stock   Five\n\n\n\n\n\n\n\n\nAlways check a website’s robots.txt file:\n\n\nCode\nimport requests\n\ndef check_robots_txt(domain):\n    robots_url = f\"https://{domain}/robots.txt\"\n    response = requests.get(robots_url)\n    return response.text\n\n# Example: Check robots.txt for books.toscrape.com\n# print(check_robots_txt(\"books.toscrape.com\"))\n\n\n\n\n\nBe respectful and don’t overwhelm servers:\n\n\nCode\nimport time\nimport random\n\ndef polite_requests(urls, delay_range=(1, 3)):\n    \"\"\"Make requests with random delays\"\"\"\n    for url in urls:\n        response = requests.get(url)\n        # Random delay between requests\n        time.sleep(random.uniform(*delay_range))\n        yield response\n\n# Example usage:\n# urls = [\n#     \"http://books.toscrape.com/catalogue/page-1.html\",\n#     \"http://books.toscrape.com/catalogue/page-2.html\",\n#     \"http://books.toscrape.com/catalogue/page-3.html\"\n# ]\n# for response in polite_requests(urls):\n#     print(f\"Fetched: {response.url}\")\n\n\n\n\n\nAlways implement proper error handling:\n\n\nCode\ndef safe_request(url, max_retries=3):\n    \"\"\"Make HTTP requests with retry logic\"\"\"\n    for attempt in range(max_retries):\n        try:\n            response = requests.get(url, timeout=10)\n            response.raise_for_status()  # Raise exception for bad status codes\n            return response\n        except requests.exceptions.RequestException as e:\n            print(f\"Attempt {attempt + 1} failed: {e}\")\n            if attempt &lt; max_retries - 1:\n                time.sleep(2 ** attempt)  # Exponential backoff\n            else:\n                raise\n\n# Example usage:\n# response = safe_request(\"http://books.toscrape.com/\")\n# print(\"Successfully fetched page!\")\n\n\n\n\n\n\n\n\n\n\nCode\ndef extract_books_from_page(html_content):\n    \"\"\"Extract book data from HTML content\"\"\"\n    soup = BeautifulSoup(html_content, \"html.parser\")\n    books = soup.find_all(\"article\", class_=\"product_pod\")\n\n    page_data = []\n    for book in books:\n        title = book.h3.a[\"title\"]\n        price = book.find(\"p\", class_=\"price_color\").text\n        stock = book.find(\"p\", class_=\"instock availability\").text.strip()\n        rating = book.p[\"class\"][1]\n\n        page_data.append(\n            {\"title\": title, \"price\": price, \"stock\": stock, \"rating\": rating}\n        )\n\n    return page_data\n\n\ndef scrape_multiple_pages(base_url, max_pages=5):\n    \"\"\"Scrape multiple pages of a website\"\"\"\n    all_data = []\n\n    for page in range(1, max_pages + 1):\n        url = f\"{base_url}catalogue/page-{page}.html\"\n        response = requests.get(url)\n\n        if response.status_code == 200:\n            # Extract data from current page\n            page_data = extract_books_from_page(response.content)\n            all_data.extend(page_data)\n            print(f\"Scraped {len(page_data)} books from page {page}\")\n        else:\n            print(f\"Failed to fetch page {page}\")\n            break\n\n    return all_data\n\n\n# Example usage:\nbooks_data = scrape_multiple_pages(\"http://books.toscrape.com/\", 3)\nprint(f\"Scraped {len(books_data)} books from 3 pages\")\n\n\nScraped 20 books from page 1\nScraped 20 books from page 2\nScraped 20 books from page 3\nScraped 60 books from 3 pages\n\n\n\n\n\n\n\nCode\ndef login_and_scrape(login_url, target_url, credentials):\n    \"\"\"Handle login before scraping\"\"\"\n    session = requests.Session()\n\n    # Login\n    login_data = {\n        'username': credentials['username'],\n        'password': credentials['password']\n    }\n\n    response = session.post(login_url, data=login_data)\n\n    # Scrape protected content\n    if response.status_code == 200:\n        protected_response = session.get(target_url)\n        return protected_response.content",
+    "crumbs": [
+      "Other",
+      "Web Scraping",
+      "Web Scraping with Python"
+    ]
+  },
+  {
+    "objectID": "other/web_scraping/web scrap.html#what-youll-learn",
+    "href": "other/web_scraping/web scrap.html#what-youll-learn",
+    "title": "Web Scraping with Python",
+    "section": "",
+    "text": "Basic concepts of web scraping\nUsing popular Python libraries: requests, BeautifulSoup, Selenium\nBest practices and ethical considerations\nReal-world examples",
+    "crumbs": [
+      "Other",
+      "Web Scraping",
+      "Web Scraping with Python"
+    ]
+  },
+  {
+    "objectID": "other/web_scraping/web scrap.html#prerequisites",
+    "href": "other/web_scraping/web scrap.html#prerequisites",
+    "title": "Web Scraping with Python",
+    "section": "",
+    "text": "Make sure you have these libraries installed:\n\n\nCode\npip install requests beautifulsoup4 selenium pandas lxml",
+    "crumbs": [
+      "Other",
+      "Web Scraping",
+      "Web Scraping with Python"
+    ]
+  },
+  {
+    "objectID": "other/web_scraping/web scrap.html#essential-libraries",
+    "href": "other/web_scraping/web scrap.html#essential-libraries",
+    "title": "Web Scraping with Python",
+    "section": "",
+    "text": "Library\nPurpose\nBest For\n\n\n\n\nrequests\nHTTP requests\nSimple static websites\n\n\nBeautifulSoup\nHTML parsing\nParsing and extracting data\n\n\nSelenium\nBrowser automation\nDynamic/JavaScript websites\n\n\npandas\nData manipulation\nOrganizing scraped data",
+    "crumbs": [
+      "Other",
+      "Web Scraping",
+      "Web Scraping with Python"
+    ]
+  },
+  {
+    "objectID": "other/web_scraping/web scrap.html#getting-started-with-requests",
+    "href": "other/web_scraping/web scrap.html#getting-started-with-requests",
+    "title": "Web Scraping with Python",
+    "section": "",
+    "text": "The requests library is the foundation for most web scraping tasks.\n\n\nCode\nimport requests\nfrom bs4 import BeautifulSoup\nimport pandas as pd\n\n# Basic GET request\nurl = \"http://books.toscrape.com/\"\nresponse = requests.get(url)\n\n# Check if request was successful\nif response.status_code == 200:\n    print(\"Successfully fetched the page!\")\n    html_content = response.text\nelse:\n    print(f\"Error: {response.status_code}\")\n\n\nSuccessfully fetched the page!\n\n\n\n\nAlways set proper headers to mimic a real browser:\n\n\nCode\nheaders = {\n    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'\n}\n\nresponse = requests.get(url, headers=headers)",
+    "crumbs": [
+      "Other",
+      "Web Scraping",
+      "Web Scraping with Python"
+    ]
+  },
+  {
+    "objectID": "other/web_scraping/web scrap.html#parsing-html-with-beautifulsoup",
+    "href": "other/web_scraping/web scrap.html#parsing-html-with-beautifulsoup",
+    "title": "Web Scraping with Python",
+    "section": "",
+    "text": "BeautifulSoup makes it easy to navigate and extract data from HTML.\n\n\nCode\nfrom bs4 import BeautifulSoup\n\n# Create BeautifulSoup object\nsoup = BeautifulSoup(html_content, 'html.parser')\n\n# Find book titles\nbook_titles = soup.find_all('h3')\n\n# Find book prices\nbook_prices = soup.find_all('p', class_='price_color')\n\n# Find all book containers\nbooks = soup.find_all('article', class_='product_pod')\n\n# Extract book information\nfor book in books[:3]:  # Show first 3 books as example\n    title = book.h3.a['title']\n    price = book.find('p', class_='price_color').text\n    print(f\"Title: {title}, Price: {price}\")\n\n\nTitle: A Light in the Attic, Price: Â£51.77\nTitle: Tipping the Velvet, Price: Â£53.74\nTitle: Soumission, Price: Â£50.10\n\n\n\n\n\n\nCode\n# CSS selectors for books\nbooks = soup.select('.product_pod')\n\n# Complex selectors for prices\nprices = soup.select('p.price_color')\n\n# Get parent/children elements - fix the iteration\nfor price in prices[:5]:  # Just use 5 price as example\n    book_container = price.find_parent('article', class_='product_pod')\n    print(f\"Found parent container: {book_container.h3.a['title']}\")\n\n\nFound parent container: A Light in the Attic\nFound parent container: Tipping the Velvet\nFound parent container: Soumission\nFound parent container: Sharp Objects\nFound parent container: Sapiens: A Brief History of Humankind",
+    "crumbs": [
+      "Other",
+      "Web Scraping",
+      "Web Scraping with Python"
+    ]
+  },
+  {
+    "objectID": "other/web_scraping/web scrap.html#real-world-example-scraping-book-information",
+    "href": "other/web_scraping/web scrap.html#real-world-example-scraping-book-information",
+    "title": "Web Scraping with Python",
+    "section": "",
+    "text": "Code\nimport requests\nfrom bs4 import BeautifulSoup\nimport pandas as pd\n\ndef scrape_books(url):\n    \"\"\"Scrape book information from a bookstore website\"\"\"\n\n    headers = {\n        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'\n    }\n\n    response = requests.get(url, headers=headers)\n    soup = BeautifulSoup(response.content, 'html.parser')\n\n    books_data = []\n\n    # Find all book containers\n    books = soup.find_all('article', class_='product_pod')\n\n    for book in books:\n        title = book.h3.a['title']\n        price = book.find('p', class_='price_color').text\n        stock = book.find('p', class_='instock availability').text.strip()\n        rating = book.p['class'][1]  # Second class contains rating\n\n        books_data.append({\n            'title': title,\n            'price': price,\n            'stock': stock,\n            'rating': rating\n        })\n\n    return pd.DataFrame(books_data)\n\n# Example usage\nbooks_df = scrape_books('http://books.toscrape.com/')\nprint(books_df.head())\n\n\n                                   title   price     stock rating\n0                   A Light in the Attic  £51.77  In stock  Three\n1                     Tipping the Velvet  £53.74  In stock    One\n2                             Soumission  £50.10  In stock    One\n3                          Sharp Objects  £47.82  In stock   Four\n4  Sapiens: A Brief History of Humankind  £54.23  In stock   Five",
+    "crumbs": [
+      "Other",
+      "Web Scraping",
+      "Web Scraping with Python"
+    ]
+  },
+  {
+    "objectID": "other/web_scraping/web scrap.html#best-practices",
+    "href": "other/web_scraping/web scrap.html#best-practices",
+    "title": "Web Scraping with Python",
+    "section": "",
+    "text": "Always check a website’s robots.txt file:\n\n\nCode\nimport requests\n\ndef check_robots_txt(domain):\n    robots_url = f\"https://{domain}/robots.txt\"\n    response = requests.get(robots_url)\n    return response.text\n\n# Example: Check robots.txt for books.toscrape.com\n# print(check_robots_txt(\"books.toscrape.com\"))\n\n\n\n\n\nBe respectful and don’t overwhelm servers:\n\n\nCode\nimport time\nimport random\n\ndef polite_requests(urls, delay_range=(1, 3)):\n    \"\"\"Make requests with random delays\"\"\"\n    for url in urls:\n        response = requests.get(url)\n        # Random delay between requests\n        time.sleep(random.uniform(*delay_range))\n        yield response\n\n# Example usage:\n# urls = [\n#     \"http://books.toscrape.com/catalogue/page-1.html\",\n#     \"http://books.toscrape.com/catalogue/page-2.html\",\n#     \"http://books.toscrape.com/catalogue/page-3.html\"\n# ]\n# for response in polite_requests(urls):\n#     print(f\"Fetched: {response.url}\")\n\n\n\n\n\nAlways implement proper error handling:\n\n\nCode\ndef safe_request(url, max_retries=3):\n    \"\"\"Make HTTP requests with retry logic\"\"\"\n    for attempt in range(max_retries):\n        try:\n            response = requests.get(url, timeout=10)\n            response.raise_for_status()  # Raise exception for bad status codes\n            return response\n        except requests.exceptions.RequestException as e:\n            print(f\"Attempt {attempt + 1} failed: {e}\")\n            if attempt &lt; max_retries - 1:\n                time.sleep(2 ** attempt)  # Exponential backoff\n            else:\n                raise\n\n# Example usage:\n# response = safe_request(\"http://books.toscrape.com/\")\n# print(\"Successfully fetched page!\")",
+    "crumbs": [
+      "Other",
+      "Web Scraping",
+      "Web Scraping with Python"
+    ]
+  },
+  {
+    "objectID": "other/web_scraping/web scrap.html#common-challenges-and-solutions",
+    "href": "other/web_scraping/web scrap.html#common-challenges-and-solutions",
+    "title": "Web Scraping with Python",
+    "section": "",
+    "text": "Code\ndef extract_books_from_page(html_content):\n    \"\"\"Extract book data from HTML content\"\"\"\n    soup = BeautifulSoup(html_content, \"html.parser\")\n    books = soup.find_all(\"article\", class_=\"product_pod\")\n\n    page_data = []\n    for book in books:\n        title = book.h3.a[\"title\"]\n        price = book.find(\"p\", class_=\"price_color\").text\n        stock = book.find(\"p\", class_=\"instock availability\").text.strip()\n        rating = book.p[\"class\"][1]\n\n        page_data.append(\n            {\"title\": title, \"price\": price, \"stock\": stock, \"rating\": rating}\n        )\n\n    return page_data\n\n\ndef scrape_multiple_pages(base_url, max_pages=5):\n    \"\"\"Scrape multiple pages of a website\"\"\"\n    all_data = []\n\n    for page in range(1, max_pages + 1):\n        url = f\"{base_url}catalogue/page-{page}.html\"\n        response = requests.get(url)\n\n        if response.status_code == 200:\n            # Extract data from current page\n            page_data = extract_books_from_page(response.content)\n            all_data.extend(page_data)\n            print(f\"Scraped {len(page_data)} books from page {page}\")\n        else:\n            print(f\"Failed to fetch page {page}\")\n            break\n\n    return all_data\n\n\n# Example usage:\nbooks_data = scrape_multiple_pages(\"http://books.toscrape.com/\", 3)\nprint(f\"Scraped {len(books_data)} books from 3 pages\")\n\n\nScraped 20 books from page 1\nScraped 20 books from page 2\nScraped 20 books from page 3\nScraped 60 books from 3 pages\n\n\n\n\n\n\n\nCode\ndef login_and_scrape(login_url, target_url, credentials):\n    \"\"\"Handle login before scraping\"\"\"\n    session = requests.Session()\n\n    # Login\n    login_data = {\n        'username': credentials['username'],\n        'password': credentials['password']\n    }\n\n    response = session.post(login_url, data=login_data)\n\n    # Scrape protected content\n    if response.status_code == 200:\n        protected_response = session.get(target_url)\n        return protected_response.content",
+    "crumbs": [
+      "Other",
+      "Web Scraping",
+      "Web Scraping with Python"
+    ]
+  },
+  {
+    "objectID": "Publish/Shiny/shiny intro.html",
+    "href": "Publish/Shiny/shiny intro.html",
+    "title": "shiny in Python introduction",
+    "section": "",
+    "text": "Code\npip install shiny\n\n\n\nif using shinylive(shiny without server) then install extension in your Quarto project\n\n\nCode\nquarto add quarto-ext/shinylive\n\n\n\n\nAdd filters in YAML header\n---\n\nfilters:\n  - shinylive\n  \n---\n\n\nShiny code\n\n```{shinylive-python}\n#| standalone: true\n\nfrom shiny import *\n\napp_ui = ui.page_fluid(\n    ui.input_slider(\"n\", \"N\", 0, 100, 40),\n    ui.output_text_verbatim(\"txt\"),\n)\n\n\ndef server(input, output, session):\n    @output\n    @render.text\n    def txt():\n        return f\"The value of n*2 is {input.n() * 2}\"\n\napp = App(app_ui, server)\n```\n\n#| '!! shinylive warning !!': |\n#|   shinylive does not work in self-contained HTML documents.\n#|   Please set `embed-resources: false` in your metadata.\n#| standalone: true\n\nfrom shiny import *\n\napp_ui = ui.page_fluid(\n    ui.input_slider(\"n\", \"N\", 0, 100, 40),\n    ui.output_text_verbatim(\"txt\"),\n)\n\n\ndef server(input, output, session):\n    @output\n    @render.text\n    def txt():\n        return f\"The value of n*2 is {input.n() * 2}\"\n\napp = App(app_ui, server)\n\n\nReference\nhttps://shiny.posit.co/py/get-started/shinylive.html\n\n\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Publish",
+      "Shiny",
+      "shiny in Python introduction"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Python Data Science Handbook",
+    "section": "",
+    "text": "Welcome to the Python Data Science Handbook! This comprehensive online resource guides you through Python for data science, from basic concepts to advanced techniques, all built with Quarto."
+  },
+  {
+    "objectID": "index.html#what-youll-learn",
+    "href": "index.html#what-youll-learn",
+    "title": "Python Data Science Handbook",
+    "section": "📚 What You’ll Learn",
+    "text": "📚 What You’ll Learn\nThe handbook covers five main areas:\n\nIntroduction: Master Python fundamentals, installation, and essential programming concepts with clear examples\nData Manipulation: Deep dive into pandas, NumPy, SQL databases, and efficient data processing techniques\nPlotting: Create stunning visualizations with seaborn, plotnine, and plotly for data storytelling\nPublishing: Share your work through interactive dashboards, web applications, and reproducible reports\nOther: Explore web scraping, advanced tools, and practical applications"
+  },
+  {
+    "objectID": "index.html#learning-path",
+    "href": "index.html#learning-path",
+    "title": "Python Data Science Handbook",
+    "section": "🎯 Learning Path",
+    "text": "🎯 Learning Path\n\nFor Beginners\n\nStart with Basic Python to understand programming fundamentals\nLearn Data Structures to organize your information\nMaster File I/O Operations to work with external data\n\n\n\nFor Data Analysts\n\nStudy Pandas for data manipulation and analysis\nExplore SQL Databases for structured data handling\nLearn Data Visualization with Seaborn and Plotly\n\n\n\nFor Advanced Users\n\nDiscover Web Scraping techniques for data collection\nBuild Interactive Applications with Shiny\nMaster Advanced Topics and best practices"
+  },
+  {
+    "objectID": "index.html#getting-started",
+    "href": "index.html#getting-started",
+    "title": "Python Data Science Handbook",
+    "section": "🚀 Getting Started",
+    "text": "🚀 Getting Started\nUse the sidebar navigation to explore topics at your own pace. Each section builds on the previous ones, but you can also jump directly to areas of interest."
+  },
+  {
+    "objectID": "index.html#additional-resources",
+    "href": "index.html#additional-resources",
+    "title": "Python Data Science Handbook",
+    "section": "📖 Additional Resources",
+    "text": "📖 Additional Resources\n\nPython Books: Curated list of essential reading materials\nStatistics Books: Recommended resources for data science concepts\nData Books: Specialized literature for data analysis\n\nHappy learning! 🚀"
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html",
+    "href": "data manipulation/6 siuba.html",
+    "title": "Data manipulation with siuba",
+    "section": "",
+    "text": "siuba (小巴) is a port of dplyr and other R libraries with seamless support for pandas and SQL",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html#comparison-with-different-python-dataframe-package",
+    "href": "data manipulation/6 siuba.html#comparison-with-different-python-dataframe-package",
+    "title": "Data manipulation with siuba",
+    "section": "1 Comparison with different python dataframe package",
+    "text": "1 Comparison with different python dataframe package\n Using python 3.11\n\n\nCode\nSys.setenv(RETICULATE_PYTHON = \"/Library/Frameworks/Python.framework/Versions/3.11/bin/python3.11\")\nlibrary(reticulate)\nuse_python(\"/Library/Frameworks/Python.framework/Versions/3.11/bin/python3.11\")",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html#load-package",
+    "href": "data manipulation/6 siuba.html#load-package",
+    "title": "Data manipulation with siuba",
+    "section": "2 load package",
+    "text": "2 load package\n\n\nCode\n# Import pandas for data manipulation\nimport pandas as pd\n# Import numpy for numerical operations\nimport numpy as np\n# Import matplotlib.pylab for plotting\nimport matplotlib.pylab as plt\n# Import seaborn for statistical data visualization\nimport seaborn as sns\n\n\n\n# Import specific functions and objects from siuba\nfrom siuba.siu import call\nfrom siuba import _, mutate, filter, group_by, summarize,show_query\nfrom siuba import *\n\n# Import sample datasets from siuba\nfrom siuba.data import mtcars,penguins\n\n\n\n\nCode\n# Select 'cyl', 'mpg', and 'hp' columns from mtcars and then take the first 5 rows\nsmall_mtcars = mtcars &gt;&gt; select(_.cyl, _.mpg, _.hp)&gt;&gt; head(5)",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html#select-column",
+    "href": "data manipulation/6 siuba.html#select-column",
+    "title": "Data manipulation with siuba",
+    "section": "3 select column",
+    "text": "3 select column\n\n3.1 get column names\n\n\nCode\n# Get a list of column names from the small_mtcars DataFrame\nlist(small_mtcars)\n\n\n\n\n3.2 select columns by name\n\n\nCode\n# Select 'cyl' and 'mpg' columns from the small_mtcars DataFrame\nsmall_mtcars &gt;&gt; select(_.cyl, _.mpg)\n\n\n\n\n3.3 select columns by name match with ‘p’\n\n\nCode\n# Select columns whose names contain the letter 'p'\nsmall_mtcars &gt;&gt; select(_.contains(\"p\"))\n\n\n\n\n3.4 select columns by index\n\n3.4.1 select first and 3rd columns\n\n\nCode\n# Select the columns at index 0 (first) and 2 (third)\nsmall_mtcars &gt;&gt; select(0,2)\n\n\n\n\n3.4.2 select first to 3rd columns\n\n\nCode\n# Select columns from index 0 up to (but not including) index 3\nsmall_mtcars &gt;&gt; select(_[0:3])",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html#drop-column",
+    "href": "data manipulation/6 siuba.html#drop-column",
+    "title": "Data manipulation with siuba",
+    "section": "4 drop column",
+    "text": "4 drop column\n\n\nCode\n# Drop the 'cyl' column from the small_mtcars DataFrame\nsmall_mtcars &gt;&gt; select(~_.cyl)",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html#renaming-column",
+    "href": "data manipulation/6 siuba.html#renaming-column",
+    "title": "Data manipulation with siuba",
+    "section": "5 Renaming column",
+    "text": "5 Renaming column\n\n\nCode\n# Rename the 'mpg' column to 'new_name_mpg'\nsmall_mtcars &gt;&gt; rename(new_name_mpg = _.mpg)",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html#create-column",
+    "href": "data manipulation/6 siuba.html#create-column",
+    "title": "Data manipulation with siuba",
+    "section": "6 Create column",
+    "text": "6 Create column\n\n6.1 Mutate\n\n\nCode\n# Create new columns based on existing ones\nmtcars.head()&gt;&gt; mutate(gear2 = _.gear+1\n                      ,gear3=if_else(_.gear &gt; 3, \"long\", \"short\")\n                       ,qsec2=case_when({\n                                          _.qsec &lt;= 17: \"short\",\n                                          _.qsec &lt;= 18: \"Medium\",\n                                          True: \"long\"\n                                                     })\n                       )\n\n\n\n\n6.2 Transmute,create column and only keep this column\n\n\nCode\n# Create a new column 'gear2' and keep only this column\nmtcars.head()&gt;&gt; transmute(gear2 = _.gear+1)",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html#filter-rows",
+    "href": "data manipulation/6 siuba.html#filter-rows",
+    "title": "Data manipulation with siuba",
+    "section": "7 Filter rows",
+    "text": "7 Filter rows\n\n\nCode\n# Filter rows where 'gear' is equal to 4\nmtcars&gt;&gt; filter(_.gear ==4)\n\n\n\n7.1 Filters with AND conditions\n\n\nCode\n# Filter rows where 'cyl' is greater than 4 AND 'gear' is equal to 5\nmtcars &gt;&gt; filter((_.cyl &gt;4) & (_.gear == 5))\n\n\n\n\n7.2 Filters with OR conditions\n\n\nCode\n# Filter rows where 'cyl' is equal to 6 OR 'gear' is equal to 5\nmtcars &gt;&gt; filter((_.cyl == 6) | (_.gear == 5))\n\n\n\n\n7.3 filter row with index\n\n7.3.1 first 3\n\n\nCode\n# Select the first 3 rows of the small_mtcars DataFrame\nsmall_mtcars&gt;&gt;head(3)\n\n\n\n\n7.3.2 last 3\n\n\nCode\n# not in siuba, in pandas\n# Select the last 3 rows of the small_mtcars DataFrame using pandas\nsmall_mtcars.tail(3)\n\n\n\n\n7.3.3 5th rows\n\n\nCode\n# not in siuba, in pandas\n# Select the row at index 4 (which is the 5th row) using pandas\nmtcars.iloc[[4]]\n\n\n\n\n7.3.4 1 and 5th rows\n\n\nCode\n# not in siuba, in pandas\n# Select rows at index 0 (1st row) and 4 (5th row) using pandas\nmtcars.iloc[[0,4]]\n\n\n\n\n7.3.5 1 to 5th rows\n\n\nCode\n# not in siuba, in pandas\n# Select rows from index 0 up to (but not including) index 4 using pandas\nmtcars.iloc[0:4]\n\n\n\n\n7.3.6 get ramdon 5 rows\n\n\nCode\n# Select 5 random rows from the mtcars DataFrame using pandas, with a fixed random_state for reproducibility\nmtcars.sample(5, random_state=42)",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html#append",
+    "href": "data manipulation/6 siuba.html#append",
+    "title": "Data manipulation with siuba",
+    "section": "8 Append",
+    "text": "8 Append\n\n8.1 append by row\n\n\nCode\n# not available in siuba yet\n#from siuba import bind_rows\n\n\n\n\nCode\n# using pandas\n\n# get 1 to 4 rows\ndata1=mtcars.iloc[0:4]\n\n# get 9 rows\ndata2=mtcars.iloc[10:11]\n\n# Concatenate data1 and data2 DataFrames by row, ignoring the original index\ndata3=pd.concat([data1, data2], ignore_index = True,axis=0)\n\n# Display the concatenated DataFrame\ndata3\n\n\n\n\n8.2 append by column\n\n\nCode\n# not available in siuba yet\n#from siuba import bind_columns\n\n\n\n\nCode\n# using pandas\n# Select the 'mpg' column from small_mtcars\ndata1=small_mtcars&gt;&gt;select(_.mpg)\n\n# Select the 'cyl' column from small_mtcars\ndata2=small_mtcars&gt;&gt;select(_.cyl)\n\n# Concatenate data1 and data2 DataFrames by column\ndata3=pd.concat([data1, data2],axis=1)\n\n# Display the concatenated DataFrame\ndata3\n\n\n\n\n8.3 Dropping NA values\nMissing values (NaN) can be handled by either removing rows/columns with missing data or by filling them with appropriate values.\n\n8.3.1 Drop rows with any NA values\n# Create a sample DataFrame with missing values\ndf_missing = pd.DataFrame({\n    'A': [1, 2, np.nan, 4],\n    'B': [5, np.nan, np.nan, 8],\n    'C': [9, 10, 11, 12]\n})\nprint(\"Original DataFrame:\")\nprint(df_missing)\n\n# Drop rows that contain any NaN values\ndf_dropped_all = df_missing.dropna()\nprint(\"\\nDataFrame after dropping rows with any NA:\")\nprint(df_dropped_all)\n\n\n8.3.2 Drop rows with NAs in specific columns\n# Drop rows that have NaN values in column 'A'\ndf_dropped_col_a = df_missing.dropna(subset=['A'])\nprint(\"\\nDataFrame after dropping rows with NA in column 'A':\")\nprint(df_dropped_col_a)\n\n\n\n8.4 Filling NA values\nMissing values can be filled with a specific value, the mean, median, or previous/next valid observation.\n\n8.4.1 Fill with a specific value\n# Fill all NaN values with 0\ndf_filled_zero = df_missing.fillna(0)\nprint(\"\\nDataFrame after filling NA with 0:\")\nprint(df_filled_zero)\n\n\n8.4.2 Fill with mean of the column\n# Fill NaN values in column 'B' with the mean of column 'B'\ndf_filled_mean = df_missing.copy()\ndf_filled_mean['B'] = df_filled_mean['B'].fillna(df_filled_mean['B'].mean())\nprint(\"\\nDataFrame after filling NA in column 'B' with its mean:\")\nprint(df_filled_mean)\n\n\n8.4.3 Forward fill (ffill)\n# Forward fill NaN values (propagate last valid observation forward to next valid observation)\ndf_ffill = df_missing.fillna(method='ffill')\nprint(\"\\nDataFrame after forward fill:\")\nprint(df_ffill)\n\n\n8.4.4 Backward fill (bfill)\n# Backward fill NaN values (propagate next valid observation backward to next valid observation)\ndf_bfill = df_missing.fillna(method='bfill')\nprint(\"\\nDataFrame after backward fill:\")\nprint(df_bfill)",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html#group-by",
+    "href": "data manipulation/6 siuba.html#group-by",
+    "title": "Data manipulation with siuba",
+    "section": "9 group by",
+    "text": "9 group by\n\n9.1 average,min,max,sum\n\n\nCode\n# Group the mtcars DataFrame by the 'cyl' column and summarize various statistics\ntbl_query = (mtcars\n  &gt;&gt; group_by(_.cyl)\n  &gt;&gt; summarize(avg_hp = _.hp.mean()\n              ,min_hp=_.hp.min()\n              ,max_hp=_.hp.max()\n              ,totol_disp=_.disp.sum()\n  )\n  )\n\n# Display the resulting aggregated DataFrame\ntbl_query\n\n\n\n\n9.2 count record and count distinct record\n\n\nCode\n# Group the mtcars DataFrame by the 'cyl' column and count the number of rows in each group\nmtcars &gt;&gt; group_by(_.cyl)  &gt;&gt; summarize(n = _.shape[0])\n\n\n\n\nCode\n# Group the mtcars DataFrame by the 'cyl' column and count the number of unique 'hp' values for each group\nmtcars &gt;&gt; group_by(_.cyl)  &gt;&gt; summarize(n = _.hp.nunique())",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html#order-rows",
+    "href": "data manipulation/6 siuba.html#order-rows",
+    "title": "Data manipulation with siuba",
+    "section": "10 order rows",
+    "text": "10 order rows\n\n\nCode\n# Sort the small_mtcars DataFrame by the 'hp' column in ascending order\nsmall_mtcars &gt;&gt; arrange(_.hp)\n\n\n\n10.1 Sort in descending order\n\n\nCode\n# Sort the small_mtcars DataFrame by the 'hp' column in descending order\nsmall_mtcars &gt;&gt; arrange(-_.hp)\n\n\n\n\n10.2 Arrange by multiple variables\n\n\nCode\n# Sort the small_mtcars DataFrame by 'cyl' in ascending order and 'mpg' in descending order\nsmall_mtcars &gt;&gt; arrange(_.cyl, -_.mpg)",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html#join",
+    "href": "data manipulation/6 siuba.html#join",
+    "title": "Data manipulation with siuba",
+    "section": "11 join",
+    "text": "11 join\n\n\nCode\n# Create a pandas DataFrame named lhs\nlhs = pd.DataFrame({'id': [1,2,3], 'val': ['lhs.1', 'lhs.2', 'lhs.3']})\n# Create a pandas DataFrame named rhs\nrhs = pd.DataFrame({'id': [1,2,4], 'val': ['rhs.1', 'rhs.2', 'rhs.3']})\n\n\n\n\nCode\n# Display the lhs DataFrame\nlhs\n\n\n\n\nCode\n# Display the rhs DataFrame\nrhs\n\n\n\n11.1 inner_join\n\n\nCode\n# Perform an inner join of lhs and rhs DataFrames on the 'id' column\nresult=lhs &gt;&gt; inner_join(_, rhs, on=\"id\")\n# Display the result\nresult\n\n\n\n\n11.2 full join\n\n\nCode\n# Perform a full outer join of rhs and lhs DataFrames on the 'id' column\nresult=rhs &gt;&gt; full_join(_, lhs, on=\"id\")\n# Display the result\nresult\n\n\n\n\n11.3 left join\n\n\nCode\n# Perform a left join of lhs and rhs DataFrames on the 'id' column\nresult=lhs &gt;&gt; left_join(_, rhs, on=\"id\")\n# Display the result\nresult\n\n\n\n\n11.4 anti join\nkeep data in left which not in right\n\n\nCode\n# Perform an anti-join: keep rows from lhs that do not have a match in rhs based on 'id'\nresult=lhs &gt;&gt; anti_join(_, rhs, on=\"id\")\n# Display the result\nresult\n\n\nkeep data in right which not in left\n\n\nCode\n# Perform an anti-join: keep rows from rhs that do not have a match in lhs based on 'id'\nresult=rhs &gt;&gt; anti_join(_, lhs, on=\"id\")\n# Display the result\nresult",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html#reshape-tables",
+    "href": "data manipulation/6 siuba.html#reshape-tables",
+    "title": "Data manipulation with siuba",
+    "section": "12 Reshape tables",
+    "text": "12 Reshape tables\n\n\nCode\n# Create a pandas DataFrame named costs\ncosts = pd.DataFrame({\n    'id': [1,2],\n    'price_x': [.1, .2],\n    'price_y': [.4, .5],\n    'price_z': [.7, .8]\n})\n\n# Display the DataFrame\ncosts\n\n\n\n12.1 Gather data long(wide to long)\nBelow 3 method will give same result\n\n\nCode\n# selecting each variable manually\n# Gather (melt) the costs DataFrame from wide to long format, specifying columns to gather\ncosts &gt;&gt; gather('measure', 'value', _.price_x, _.price_y, _.price_z)\n\n\nother way:\n\n\nCode\n# selecting variables using a slice\n# Gather (melt) the costs DataFrame from wide to long format, specifying a slice of columns to gather\ncosts &gt;&gt; gather('measure', 'value', _[\"price_x\":\"price_z\"])\n\n\nother way:\n\n\nCode\n# selecting by excluding id\n# Gather (melt) the costs DataFrame from wide to long format, excluding the 'id' column\ncosts &gt;&gt; gather('measure', 'value', -_.id)\n\n\n\n\n12.2 Spread data wide(long to wide)\n\n\nCode\n# Gather the costs DataFrame into a long format and store it in costs_long\ncosts_long= costs&gt;&gt; gather('measure', 'value', -_.id)\n# Display the costs_long DataFrame\ncosts_long\n\n\n\n\nCode\n# Spread the costs_long DataFrame from long to wide format\ncosts_long&gt;&gt; spread('measure', 'value')",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html#string",
+    "href": "data manipulation/6 siuba.html#string",
+    "title": "Data manipulation with siuba",
+    "section": "13 string",
+    "text": "13 string\nsiuba provides convenient methods for string manipulation, often mirroring pandas string methods, allowing for efficient operations on text data within DataFrames.\n\n\nCode\n# Create a pandas DataFrame named df\ndf = pd.DataFrame({'text': ['abc', 'DDD','1243c','aeEe'], 'num': [3, 4,7,8]})\n\n# Display the DataFrame\ndf\n\n\n\n13.1 upper case\n\n\nCode\n# Add a new column 'text_new' with the uppercase version of the 'text' column\ndf&gt;&gt; mutate(text_new=_.text.str.upper())\n\n\n\n\n13.2 lower case\n\n\nCode\n# Add a new column 'text_new' with the lowercase version of the 'text' column\ndf&gt;&gt; mutate(text_new=_.text.str.lower())\n\n\n\n\n13.3 match\n\n\nCode\n# Add multiple new columns based on string matching conditions\ndf&gt;&gt; mutate(text_new1=if_else(_.text== \"abc\",'T','F')\n            ,text_new2=if_else(_.text.str.startswith(\"a\"),'T','F')\n            ,text_new3=if_else(_.text.str.endswith(\"c\"),'T','F')\n            ,text_new4=if_else(_.text.str.contains(\"4\"),'T','F')\n\n)\n\n\n\n\n13.4 concatenation\n\n\nCode\n# Add a new column 'text_new1' by concatenating the 'text' column with itself, separated by ' is '\ndf&gt;&gt; mutate(text_new1=_.text+' is '+_.text\n)\n\n\n\n\n13.5 replace\nUse .str.replace(…, regex=True) with regular expressions to replace patterns in strings.\nFor example, the code below uses “p.”, where . is called a wildcard–which matches any character.\n\n\nCode\n# Add a new column 'text_new1' by replacing patterns in the 'text' column using a regular expression\ndf&gt;&gt; mutate(text_new1=_.text.str.replace(\"a.\", \"XX\", regex=True)\n)\n\n\n\n\n13.6 extract\nUse str.extract() with a regular expression to pull out a matching piece of text.\nFor example the regular expression “^(.*) ” contains the following pieces:\n\na matches the literal letter “a”\n.* has a . which matches anything, and * which modifies it to apply 0 or more times.\n\n\n\nCode\n# Add new columns by extracting substrings from the 'text' column using regular expressions\ndf&gt;&gt; mutate(text_new1=_.text.str.extract(\"a(.*)\")\n            ,text_new2=_.text.str.extract(\"(.*)c\")\n)",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html#date",
+    "href": "data manipulation/6 siuba.html#date",
+    "title": "Data manipulation with siuba",
+    "section": "14 date",
+    "text": "14 date\nsiuba leverages pandas’ datetime capabilities, allowing for flexible parsing, manipulation, and formatting of date and time data.\n\n\nCode\n# Create a pandas DataFrame with 'dates' and 'raw' columns\ndf_dates = pd.DataFrame({\n    \"dates\": pd.to_datetime([\"2021-01-02\", \"2021-02-03\"]),\n    \"raw\": [\"2023-04-05 06:07:08\", \"2024-05-06 07:08:09\"],\n})\n# Display the DataFrame\ndf_dates\n\n\n\n14.1 Extracting Date Components\nYou can extract various components like year, month, day, hour, minute, second from datetime objects.\n# Extract year, month, and day from the 'dates' column\ndf_dates &gt;&gt; mutate(\n    year=_.dates.dt.year,\n    month=_.dates.dt.month,\n    day=_.dates.dt.day\n)\n\n\n14.2 Formatting Dates\nDates can be formatted into different string representations using strftime().\n# Format the 'raw' column as YYYY-MM-DD HH:MM:SS\ndf_dates &gt;&gt; mutate(\n    formatted_raw=call(pd.to_datetime, _.raw).dt.strftime(\"%Y-%m-%d %H:%M:%S\")\n)\n\n\nCode\n# Import datetime module\nfrom datetime import datetime\n\n# Add new columns for month name, formatted raw date, and year from raw date\ndf_date=df_dates&gt;&gt;mutate(month=_.dates.dt.month_name()\n                  ,date_format_raw = call(pd.to_datetime, _.raw)\n                  ,date_format_raw_year=_.date_format_raw.dt.year\n\n)\n\n# Display the DataFrame\ndf_date\n\n\n\n\nCode\ndf_date.info()",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html#using-siuba-with-database",
+    "href": "data manipulation/6 siuba.html#using-siuba-with-database",
+    "title": "Data manipulation with siuba",
+    "section": "15 using siuba with database",
+    "text": "15 using siuba with database\n\n15.1 set up a sqlite database, with an mtcars table.\n\n\nCode\n# Import create_engine from sqlalchemy for database connection\nfrom sqlalchemy import create_engine\n# Import LazyTbl for lazy SQL operations\nfrom siuba.sql import LazyTbl\n# Import necessary siuba functions\nfrom siuba import _, group_by, summarize, show_query, collect \n# Import mtcars dataset\nfrom siuba.data import mtcars\n\n# Create an in-memory SQLite database engine\nengine = create_engine(\"sqlite:///:memory:\")\n# Copy the mtcars DataFrame to a SQL table named 'mtcars', replacing it if it already exists\nmtcars.to_sql(\"mtcars\", engine, if_exists = \"replace\")\n\n\n\n\n15.2 create table\n\n\nCode\n# Create a lazy SQL DataFrame representing the 'mtcars' table in the database\ntbl_mtcars = LazyTbl(engine, \"mtcars\")\n# Display the LazyTbl object\ntbl_mtcars\n\n\n\n\n15.3 create query\n\n\nCode\n# connect with siuba\n\n# Create a query that groups by 'mpg' and summarizes the average 'hp'\ntbl_query = (tbl_mtcars\n  &gt;&gt; group_by(_.mpg)\n  &gt;&gt; summarize(avg_hp = _.hp.mean())\n  )\n\n# Display the query object\ntbl_query\n\n\n\n\n15.4 show query\n\n\nCode\n # Show the generated SQL query\n tbl_query &gt;&gt; show_query()\n\n\n\n\n15.5 Collect to DataFrame\nbecause lazy expressions,the collect function is actually running the sql.\n\n\nCode\n# Collect the results of the query into a pandas DataFrame\ndata=tbl_query &gt;&gt; collect()\n# Print the resulting DataFrame\nprint(data)",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/6 siuba.html#reference",
+    "href": "data manipulation/6 siuba.html#reference",
+    "title": "Data manipulation with siuba",
+    "section": "16 reference:",
+    "text": "16 reference:\nhttps://siuba.org/",
+    "crumbs": [
+      "data manipulation",
+      "Data manipulation with siuba"
+    ]
+  },
+  {
+    "objectID": "data manipulation/5 SQL database.html#create-database-file-pythonsqlite.db-and-copy-tips-data-and-planets-data-into-database",
+    "href": "data manipulation/5 SQL database.html#create-database-file-pythonsqlite.db-and-copy-tips-data-and-planets-data-into-database",
+    "title": "SQL database with python",
+    "section": "1.1 create database file pythonsqlite.db and copy tips data and planets data into database",
+    "text": "1.1 create database file pythonsqlite.db and copy tips data and planets data into database\n\n\nCode\n# Import the sqlite3 module\nimport sqlite3\n# Create a connection to the SQLite database file 'pythonsqlite.db'\ndb = sqlite3.connect('pythonsqlite.db')\n\n# Write the 'tips' DataFrame to a SQL table named 'tips', replacing it if it already exists\ntips.to_sql(name='tips', con=db,if_exists='replace')\n# Write the 'planets' DataFrame to a SQL table named 'planets', replacing it if it already exists\nplanets.to_sql(name='planets', con=db,if_exists='replace')\n\n# Close the database connection\ndb.close()",
+    "crumbs": [
+      "data manipulation",
+      "SQL database with python"
+    ]
+  },
+  {
+    "objectID": "data manipulation/5 SQL database.html#check-all-table-in-database",
+    "href": "data manipulation/5 SQL database.html#check-all-table-in-database",
+    "title": "SQL database with python",
+    "section": "1.2 check all table in database",
+    "text": "1.2 check all table in database\n\n\nCode\n# Connect to the SQLite database file 'pythonsqlite.db'\ndb = sqlite3.connect('pythonsqlite.db')\n# Execute an SQL query to select table names from sqlite_master and read into a pandas DataFrame\ntable = pd.read_sql_query(\"SELECT name FROM sqlite_master WHERE type='table';\", db)\n# Display the DataFrame\ntable\n\n\n\n\n\n\n\n\n\nname\n\n\n\n\n0\ntips\n\n\n1\nplanets",
+    "crumbs": [
+      "data manipulation",
+      "SQL database with python"
+    ]
+  },
+  {
+    "objectID": "data manipulation/5 SQL database.html#select",
+    "href": "data manipulation/5 SQL database.html#select",
+    "title": "SQL database with python",
+    "section": "2.1 select",
+    "text": "2.1 select\n\n\nCode\n# Connect to the SQLite database\ndb = sqlite3.connect('pythonsqlite.db')\n# Define an SQL query to select all columns from the 'tips' table, limiting to 3 rows\nsql=\"select * from tips LIMIT 3;\"\n# Execute the SQL query and read the result into a pandas DataFrame\ntable = pd.read_sql_query(sql,db)\n# Display the DataFrame\ntable\n\n\n\n\n\n\n\n\n\nindex\ntotal_bill\ntip\nsex\nsmoker\nday\ntime\nsize\n\n\n\n\n0\n0\n16.99\n1.01\nFemale\nNo\nSun\nDinner\n2\n\n\n1\n1\n10.34\n1.66\nMale\nNo\nSun\nDinner\n3\n\n\n2\n2\n21.01\n3.50\nMale\nNo\nSun\nDinner\n3",
+    "crumbs": [
+      "data manipulation",
+      "SQL database with python"
+    ]
+  },
+  {
+    "objectID": "data manipulation/5 SQL database.html#renaming-column",
+    "href": "data manipulation/5 SQL database.html#renaming-column",
+    "title": "SQL database with python",
+    "section": "2.2 Renaming column",
+    "text": "2.2 Renaming column\n\n\nCode\n# Define an SQL query to select 'total_bill' and alias it as 'new_total_bill'\nsql=\"select total_bill as new_total_bill from tips\"\n# Execute the SQL query and read the result into a pandas DataFrame\ntable = pd.read_sql_query(sql,db)\n# Display the first 5 rows of the DataFrame\ntable.head()\n\n\n\n\n\n\n\n\n\nnew_total_bill\n\n\n\n\n0\n16.99\n\n\n1\n10.34\n\n\n2\n21.01\n\n\n3\n23.68\n\n\n4\n24.59",
+    "crumbs": [
+      "data manipulation",
+      "SQL database with python"
+    ]
+  },
+  {
+    "objectID": "data manipulation/5 SQL database.html#create-column",
+    "href": "data manipulation/5 SQL database.html#create-column",
+    "title": "SQL database with python",
+    "section": "2.3 create column",
+    "text": "2.3 create column\n\n\nCode\n# Define an SQL query to select 'total_bill' as 'new_total_bill' and also the original 'total_bill'\nsql=\"select total_bill as new_total_bill,total_bill from tips\"\n# Execute the SQL query and read the result into a pandas DataFrame\ntable = pd.read_sql_query(sql,db)\n# Display the first 5 rows of the DataFrame\ntable.head()\n\n\n\n\n\n\n\n\n\nnew_total_bill\ntotal_bill\n\n\n\n\n0\n16.99\n16.99\n\n\n1\n10.34\n10.34\n\n\n2\n21.01\n21.01\n\n\n3\n23.68\n23.68\n\n\n4\n24.59\n24.59",
+    "crumbs": [
+      "data manipulation",
+      "SQL database with python"
+    ]
+  },
+  {
+    "objectID": "data manipulation/5 SQL database.html#filter-rows",
+    "href": "data manipulation/5 SQL database.html#filter-rows",
+    "title": "SQL database with python",
+    "section": "2.4 Filter rows",
+    "text": "2.4 Filter rows\n\n\nCode\n# Define an SQL query to select all columns from 'tips' where 'sex' is 'Male'\nsql=\"select * from tips where sex='Male'\"\n# Execute the SQL query and read the result into a pandas DataFrame\ntable = pd.read_sql_query(sql,db)\n# Display the first 5 rows of the DataFrame\ntable.head()\n\n\n\n\n\n\n\n\n\nindex\ntotal_bill\ntip\nsex\nsmoker\nday\ntime\nsize\n\n\n\n\n0\n1\n10.34\n1.66\nMale\nNo\nSun\nDinner\n3\n\n\n1\n2\n21.01\n3.50\nMale\nNo\nSun\nDinner\n3\n\n\n2\n3\n23.68\n3.31\nMale\nNo\nSun\nDinner\n2\n\n\n3\n5\n25.29\n4.71\nMale\nNo\nSun\nDinner\n4\n\n\n4\n6\n8.77\n2.00\nMale\nNo\nSun\nDinner\n2\n\n\n\n\n\n\n\n\n2.4.1 Filters with AND conditions\n\n\nCode\n# Define an SQL query to select all columns from 'tips' where 'sex' is 'Male' AND 'size' is greater than 3\nsql=\"select * from tips where sex='Male' and size&gt;3\"\n# Execute the SQL query and read the result into a pandas DataFrame\ntable = pd.read_sql_query(sql,db)\n# Display the first 5 rows of the DataFrame\ntable.head()\n\n\n\n\n\n\n\n\n\nindex\ntotal_bill\ntip\nsex\nsmoker\nday\ntime\nsize\n\n\n\n\n0\n5\n25.29\n4.71\nMale\nNo\nSun\nDinner\n4\n\n\n1\n7\n26.88\n3.12\nMale\nNo\nSun\nDinner\n4\n\n\n2\n13\n18.43\n3.00\nMale\nNo\nSun\nDinner\n4\n\n\n3\n23\n39.42\n7.58\nMale\nNo\nSat\nDinner\n4\n\n\n4\n25\n17.81\n2.34\nMale\nNo\nSat\nDinner\n4\n\n\n\n\n\n\n\n\n\n2.4.2 Filters with or conditions\n\n\nCode\n# Define an SQL query to select all columns from 'tips' where 'sex' is 'Male' OR 'size' is greater than 3\nsql=\"select * from tips where sex='Male' or size&gt;3\"\n# Execute the SQL query and read the result into a pandas DataFrame\ntable = pd.read_sql_query(sql,db)\n# Display the shape of the DataFrame (number of rows, number of columns)\ntable.shape\n\n\n(169, 8)",
+    "crumbs": [
+      "data manipulation",
+      "SQL database with python"
+    ]
+  },
+  {
+    "objectID": "data manipulation/5 SQL database.html#append",
+    "href": "data manipulation/5 SQL database.html#append",
+    "title": "SQL database with python",
+    "section": "2.5 Append",
+    "text": "2.5 Append\n\n2.5.1 append by row\n\n\nCode\n# Define an SQL query to union all rows from 'tips' with itself\nsql=\"select * from tips UNION all select * from tips\"\n# Execute the SQL query and read the result into a pandas DataFrame\ntable = pd.read_sql_query(sql,db)\n# Display the shape of the DataFrame\ntable.shape\n\n\n(488, 8)\n\n\n\n\n2.5.2 append by column\n\n\n2.5.3 Dropping NA values\n\n\n2.5.4 keep NA values",
+    "crumbs": [
+      "data manipulation",
+      "SQL database with python"
+    ]
+  },
+  {
+    "objectID": "data manipulation/5 SQL database.html#group-by",
+    "href": "data manipulation/5 SQL database.html#group-by",
+    "title": "SQL database with python",
+    "section": "2.6 group by",
+    "text": "2.6 group by\n\n2.6.1 average,min,max,sum\n\n\nCode\n# Define an SQL query to calculate the average, minimum, maximum, and sum of 'total_bill' grouped by 'sex'\nsql=\"select AVG(total_bill),min(total_bill),max(total_bill),sum(total_bill) from tips group by sex\"\n# Execute the SQL query and read the result into a pandas DataFrame\ntable = pd.read_sql_query(sql,db)\n# Display the DataFrame\ntable\n\n\n\n\n\n\n\n\n\nAVG(total_bill)\nmin(total_bill)\nmax(total_bill)\nsum(total_bill)\n\n\n\n\n0\n18.056897\n3.07\n44.30\n1570.95\n\n\n1\n20.744076\n7.25\n50.81\n3256.82\n\n\n\n\n\n\n\n\n\n2.6.2 count\n\n\nCode\n# Define an SQL query to count records grouped by 'sex'\nsql=\"select sex,count(*) from tips group by 1\"\n# Execute the SQL query and read the result into a pandas DataFrame\ntable = pd.read_sql_query(sql,db)\n# Display the DataFrame\ntable\n\n\n\n\n\n\n\n\n\nsex\ncount(*)\n\n\n\n\n0\nFemale\n87\n\n\n1\nMale\n157",
+    "crumbs": [
+      "data manipulation",
+      "SQL database with python"
+    ]
+  },
+  {
+    "objectID": "data manipulation/5 SQL database.html#order-rows",
+    "href": "data manipulation/5 SQL database.html#order-rows",
+    "title": "SQL database with python",
+    "section": "2.7 order rows",
+    "text": "2.7 order rows\n\n\nCode\n# Define an SQL query to select all columns from 'tips' and order by 'total_bill' in ascending order\nsql=\"select * from tips order by total_bill\"\n# Execute the SQL query and read the result into a pandas DataFrame\ntable = pd.read_sql_query(sql,db)\n# Display the first 5 rows of the DataFrame\ntable.head()\n\n\n\n\n\n\n\n\n\nindex\ntotal_bill\ntip\nsex\nsmoker\nday\ntime\nsize\n\n\n\n\n0\n67\n3.07\n1.00\nFemale\nYes\nSat\nDinner\n1\n\n\n1\n92\n5.75\n1.00\nFemale\nYes\nFri\nDinner\n2\n\n\n2\n111\n7.25\n1.00\nFemale\nNo\nSat\nDinner\n1\n\n\n3\n172\n7.25\n5.15\nMale\nYes\nSun\nDinner\n2\n\n\n4\n149\n7.51\n2.00\nMale\nNo\nThur\nLunch\n2\n\n\n\n\n\n\n\n\n2.7.1 Sort in descending order\n\n\nCode\n# Define an SQL query to select all columns from 'tips' and order by 'total_bill' in descending order\nsql=\"select * from tips order by total_bill desc\"\n# Execute the SQL query and read the result into a pandas DataFrame\ntable = pd.read_sql_query(sql,db)\n# Display the first 5 rows of the DataFrame\ntable.head()\n\n\n\n\n\n\n\n\n\nindex\ntotal_bill\ntip\nsex\nsmoker\nday\ntime\nsize\n\n\n\n\n0\n170\n50.81\n10.00\nMale\nYes\nSat\nDinner\n3\n\n\n1\n212\n48.33\n9.00\nMale\nNo\nSat\nDinner\n4\n\n\n2\n59\n48.27\n6.73\nMale\nNo\nSat\nDinner\n4\n\n\n3\n156\n48.17\n5.00\nMale\nNo\nSun\nDinner\n6\n\n\n4\n182\n45.35\n3.50\nMale\nYes\nSun\nDinner\n3\n\n\n\n\n\n\n\n\n\n2.7.2 Arrange by multiple variables\n\n\nCode\n# Define an SQL query to select all columns from 'tips' and order by 'total_bill' then by 'tip'\nsql=\"select * from tips order by total_bill,tip\"\n# Execute the SQL query and read the result into a pandas DataFrame\ntable = pd.read_sql_query(sql,db)\n# Display the first 5 rows of the DataFrame\ntable.head()\n\n\n\n\n\n\n\n\n\nindex\ntotal_bill\ntip\nsex\nsmoker\nday\ntime\nsize\n\n\n\n\n0\n67\n3.07\n1.00\nFemale\nYes\nSat\nDinner\n1\n\n\n1\n92\n5.75\n1.00\nFemale\nYes\nFri\nDinner\n2\n\n\n2\n111\n7.25\n1.00\nFemale\nNo\nSat\nDinner\n1\n\n\n3\n172\n7.25\n5.15\nMale\nYes\nSun\nDinner\n2\n\n\n4\n149\n7.51\n2.00\nMale\nNo\nThur\nLunch\n2",
+    "crumbs": [
+      "data manipulation",
+      "SQL database with python"
+    ]
+  },
+  {
+    "objectID": "data manipulation/5 SQL database.html#join",
+    "href": "data manipulation/5 SQL database.html#join",
+    "title": "SQL database with python",
+    "section": "2.8 join",
+    "text": "2.8 join\nJoining tables is a fundamental operation in SQL, allowing you to combine rows from two or more tables based on a related column between them. Here are common types of joins:\n\n2.8.1 inner_join\nAn INNER JOIN returns only the rows that have matching values in both tables.\n# Create sample DataFrames for demonstration\nlhs_df = pd.DataFrame({'id': [1,2,3], 'val': ['lhs.1', 'lhs.2', 'lhs.3']})\nrhs_df = pd.DataFrame({'id': [1,2,4], 'val': ['rhs.1', 'rhs.2', 'rhs.3']})\n\n# Perform an INNER JOIN using pandas merge\ninner_join_result = pd.merge(lhs_df, rhs_df, on='id', how='inner')\nprint(\"Inner Join Result:\")\nprint(inner_join_result)\n\n\n2.8.2 full join\nA FULL OUTER JOIN returns all rows when there is a match in one of the tables. If there are no matches, it returns NULL values for columns from the table that doesn’t have a match.\n# Perform a FULL OUTER JOIN using pandas merge\nfull_join_result = pd.merge(lhs_df, rhs_df, on='id', how='outer')\nprint(\"\\nFull Outer Join Result:\")\nprint(full_join_result)\n\n\n2.8.3 left join\nA LEFT JOIN (or LEFT OUTER JOIN) returns all rows from the left table, and the matching rows from the right table. If there is no match from the right table, NULL values are used.\n# Perform a LEFT JOIN using pandas merge\nleft_join_result = pd.merge(lhs_df, rhs_df, on='id', how='left')\nprint(\"\\nLeft Join Result:\")\nprint(left_join_result)\n\n\n2.8.4 anti join\nAn ANTI JOIN returns rows from the left table that have no matching rows in the right table.\n# Perform an ANTI JOIN (rows in lhs_df not in rhs_df)\nanti_join_result = lhs_df[~lhs_df['id'].isin(rhs_df['id'])]\nprint(\"\\nAnti Join Result (lhs_df not in rhs_df):\")\nprint(anti_join_result)",
+    "crumbs": [
+      "data manipulation",
+      "SQL database with python"
+    ]
+  },
+  {
+    "objectID": "data manipulation/5 SQL database.html#reshape-tables",
+    "href": "data manipulation/5 SQL database.html#reshape-tables",
+    "title": "SQL database with python",
+    "section": "2.9 Reshape tables",
+    "text": "2.9 Reshape tables\n\n2.9.1 Gather data long(wide to long)\n\n\n2.9.2 Spread data wide (long to wide)",
+    "crumbs": [
+      "data manipulation",
+      "SQL database with python"
+    ]
+  },
+  {
+    "objectID": "data manipulation/5 SQL database.html#string",
+    "href": "data manipulation/5 SQL database.html#string",
+    "title": "SQL database with python",
+    "section": "2.10 string",
+    "text": "2.10 string\n\n2.10.1 upper case\n\n\n2.10.2 lower case\n\n\n2.10.3 match\n\n\n2.10.4 concatenation\n\n\n2.10.5 replace\n\n\n2.10.6 extract",
+    "crumbs": [
+      "data manipulation",
+      "SQL database with python"
+    ]
+  },
+  {
+    "objectID": "data manipulation/5 SQL database.html#date",
+    "href": "data manipulation/5 SQL database.html#date",
+    "title": "SQL database with python",
+    "section": "2.11 date",
+    "text": "2.11 date",
+    "crumbs": [
+      "data manipulation",
+      "SQL database with python"
+    ]
+  },
+  {
+    "objectID": "data manipulation/5 SQL database.html#create-table-into-database",
+    "href": "data manipulation/5 SQL database.html#create-table-into-database",
+    "title": "SQL database with python",
+    "section": "2.12 create table into database",
+    "text": "2.12 create table into database\n\n\nCode\n# Define an SQL query to create a new table named 'new_tips' if it doesn't already exist, copying data from 'tips'\nsql=\"create table if not exists new_tips as select * from tips\"\n# Execute the SQL query\ndb.execute(sql)\n\n# Execute an SQL query to select table names from sqlite_master and read into a pandas DataFrame\ntable = pd.read_sql_query(\"SELECT name FROM sqlite_master WHERE type='table';\", db)\n# Display the DataFrame\ntable\n\n\n\n\n\n\n\n\n\nname\n\n\n\n\n0\ntips\n\n\n1\nplanets\n\n\n2\nnew_tips",
+    "crumbs": [
+      "data manipulation",
+      "SQL database with python"
+    ]
+  },
+  {
+    "objectID": "data manipulation/5 SQL database.html#delete-table-in-database",
+    "href": "data manipulation/5 SQL database.html#delete-table-in-database",
+    "title": "SQL database with python",
+    "section": "2.13 delete table in database",
+    "text": "2.13 delete table in database\n\n\nCode\n# Define an SQL query to drop the table named 'new_tips' if it exists\nsql=\"drop table if  exists new_tips\"\n# Execute the SQL query\ndb.execute(sql)\n\n# Execute an SQL query to select table names from sqlite_master and read into a pandas DataFrame\ntable = pd.read_sql_query(\"SELECT name FROM sqlite_master WHERE type='table';\", db)\n# Display the DataFrame\ntable\n\n\n\n\n\n\n\n\n\nname\n\n\n\n\n0\ntips\n\n\n1\nplanets",
+    "crumbs": [
+      "data manipulation",
+      "SQL database with python"
+    ]
+  },
+  {
+    "objectID": "data manipulation/5 SQL database.html#edit-table-in-database",
+    "href": "data manipulation/5 SQL database.html#edit-table-in-database",
+    "title": "SQL database with python",
+    "section": "2.14 edit table in database",
+    "text": "2.14 edit table in database\n\n\nCode\n# Close the database connection\ndb.close()",
+    "crumbs": [
+      "data manipulation",
+      "SQL database with python"
+    ]
+  }
+]

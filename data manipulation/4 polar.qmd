@@ -1,0 +1,721 @@
+---
+title: "Data manipulation with polars"
+author: "Tony Duan"
+
+execute:
+  warning: false
+  error: false
+
+   
+format:
+  html:
+    toc: true
+    toc-location: right
+    code-fold: show
+    code-tools: true
+    number-sections: true
+    code-block-bg: true
+    code-block-border-left: "#31BAE9"
+---
+
+![](images/clipboard-532069754.png)
+
+Polars is a DataFrame interface on top of an OLAP Query Engine implemented in Rust using [Apache Arrow Columnar Format](https://arrow.apache.org/docs/format/Columnar.html) as the memory model.
+
+-   Lazy \| eager execution
+
+-   Multi-threaded
+
+-   SIMD
+
+-   Query optimization
+
+-   Powerful expression API
+
+-   Hybrid Streaming (larger-than-RAM datasets)
+
+-   Rust \| Python \| NodeJS \| R \| ...
+
+
+
+```{r}
+#Sys.setenv(RETICULATE_PYTHON = "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3.11")
+library(reticulate)
+#use_python("/Library/Frameworks/Python.framework/Versions/3.11/bin/python3.11")
+py_require(c("polars", "pandas", "numpy", "matplotlib", "duckdb","datetime","seaborn","pyarrow"))
+```
+
+## load package
+
+```{python}
+# Import the pandas library for data manipulation
+import pandas as pd
+# Import numpy for numerical operations
+import numpy as np
+# Import matplotlib.pylab for plotting
+import matplotlib.pylab as plt
+# Import seaborn for statistical data visualization
+import seaborn as sns
+# Import polars for DataFrame operations
+import polars as pl
+# Import col and when from polars for expression building
+from polars import col, when
+# Import datetime for date and time operations
+from datetime import datetime
+# Import duckdb for in-memory SQL database operations
+import duckdb
+```
+
+## import data from csv 
+
+```{python}
+# Read the CSV file './data/mtcars.csv' into a Polars DataFrame
+mtcars = pl.read_csv("./data/mtcars.csv")
+```
+
+## import data from pandas
+
+```{python}
+# Read the CSV file into a pandas DataFrame
+mtcars_pd= pd.read_csv("./data/mtcars.csv")
+# Print the type of mtcars_pd
+type(mtcars_pd)
+
+# Convert the pandas DataFrame to a Polars DataFrame
+mtcars = pl.from_pandas(mtcars_pd)
+# Print the type of mtcars
+type(mtcars)
+```
+
+
+
+
+```{python}
+# Select the 'cyl', 'mpg', and 'hp' columns from the mtcars DataFrame and take the first 5 rows
+small_mtcars = mtcars.select(["cyl", "mpg","hp"]).head(5)
+```
+
+## select column
+
+### get column names
+
+```{python}
+# Get the column names of the small_mtcars DataFrame
+small_mtcars.columns
+```
+
+### select columns by name
+
+```{python}
+# Select the 'cyl' and 'mpg' columns from the small_mtcars DataFrame
+small_mtcars.select(["cyl", "mpg"])
+```
+
+### select columns by name match with 'p'
+
+```{python}
+# Select columns with 'p' in the name
+cols_with_p = [col for col in small_mtcars.columns if 'p' in col]
+
+# Select the columns identified in cols_with_p from the small_mtcars DataFrame
+small_mtcars.select(cols_with_p)
+
+```
+
+### select columns by index
+
+#### select first and 3rd columns
+
+```{python}
+# Select the first (index 0) and third (index 2) columns of the small_mtcars DataFrame
+small_mtcars.select([small_mtcars.columns[0], small_mtcars.columns[2]])
+```
+
+#### select first to 3rd columns
+
+```{python}
+# Select columns from index 0 up to (but not including) index 3
+small_mtcars.select(small_mtcars.columns[0:3])
+```
+
+## drop column
+
+```{python}
+# Drop the column named "cyl" from the small_mtcars DataFrame
+small_mtcars.drop("cyl")
+```
+
+## Renaming column
+
+```{python}
+# Rename the column 'mpg' to 'new_name_mpg'
+small_mtcars.rename({
+    "mpg": "new_name_mpg"
+})
+
+
+```
+
+## Create column
+
+### Mutate
+
+```{python}
+# Apply transformations to the mtcars DataFrame
+result = (
+    mtcars.head()
+    .with_columns([
+        # Create a new column 'gear2' by adding 1 to the 'gear' column
+        (col("gear") + 1).alias("gear2")
+        
+        # Create a new column 'gear3': if 'gear' > 3 then 'long', else 'short'
+        ,when(col("gear") > 3).then(pl.lit("long"))
+        .otherwise(pl.lit("short")).alias("gear3")
+        
+        # Create a new column 'qsec2' with conditional logic based on 'qsec' values
+        ,when(col("qsec") <= 17).then(pl.lit("short"))
+        .when(col("qsec") <= 18).then(pl.lit("Medium"))
+        .otherwise(pl.lit("long")).alias("qsec2")
+
+    ])
+)
+
+# Print the resulting DataFrame
+print(result)
+```
+
+
+
+### Transmute,create column and only keep this column
+
+```{python}
+
+# Select the 'gear' column from the first few rows of mtcars, add 1 to it, and alias it as 'gear2'
+mtcars.head().select([
+        (col("gear") + 1).alias("gear2")
+    ])
+
+```
+
+## Filter rows
+
+```{python}
+
+# Filter rows where the 'gear' column is equal to 4
+mtcars.filter(
+   (col("gear") == 4)
+)
+
+```
+
+### Filters with AND conditions
+
+```{python}
+# Filter rows where 'cyl' is greater than 4 AND 'gear' is equal to 5
+mtcars.filter(
+    (col("cyl") > 4) & (col("gear") == 5)
+)
+
+```
+
+### Filters with OR conditions
+
+```{python}
+# Filter rows where 'cyl' is equal to 6 OR 'gear' is equal to 5
+mtcars.filter(
+    (col("cyl") == 6) | (col("gear") == 5)
+)
+```
+
+
+
+### filter row with index
+
+#### first 3
+
+```{python}
+# Select the first 3 rows of the small_mtcars DataFrame
+small_mtcars.head(3)
+```
+
+#### last 3
+
+```{python}
+# Select the last 3 rows of the small_mtcars DataFrame
+small_mtcars.tail(3)
+```
+
+#### 5th rows
+
+```{python}
+# Select the row at index 4 (which is the 5th row)
+mtcars[4]
+```
+
+#### 1 and 5th rows
+
+```{python}
+# Select rows at index 0 (1st row) and 4 (5th row)
+mtcars[[0, 4]]
+```
+#### get 1 to 4  rows
+
+```{python}
+# Select rows from index 0 up to (but not including) index 4
+mtcars[0:4]
+```
+
+
+
+#### get ramdon 5 rows
+
+```{python}
+# Select 5 random rows from the mtcars DataFrame, with a fixed seed for reproducibility
+mtcars.sample(n=5, seed=42)
+```
+
+
+
+## Append
+
+### append by row
+
+
+```{python}
+# Select rows from index 0 up to (but not including) index 4
+data1 = mtcars[0:4]
+# Select rows from index 10 up to (but not including) index 11
+data2 = mtcars[10:11]
+
+# Concatenate data1 and data2 DataFrames vertically
+pl.concat([data1, data2], how="vertical")
+```
+
+### append by column
+
+
+```{python}
+# Select the 'mpg' column from small_mtcars
+data1 = small_mtcars.select("mpg")
+# Select the 'cyl' column from small_mtcars
+data2 = small_mtcars.select("cyl")
+
+# Concatenate data1 and data2 DataFrames horizontally
+pl.concat([data1, data2], how="horizontal")
+```
+
+### Dropping NA values
+
+
+```{python}
+# Drop all rows that contain any null values
+mtcars.drop_nulls()
+```
+### To drop rows with NAs in specific columns:
+
+```{python}
+# Drop rows that have null values in either the "mpg" or "disp" columns
+mtcars.drop_nulls(subset=["mpg", "disp"])
+```
+
+### keep NA values
+
+## group by
+
+### average,min,max,sum
+
+```{python}
+# Group the mtcars DataFrame by the 'cyl' column and aggregate various statistics
+tbl_query = (
+    mtcars
+    .group_by("cyl")
+    .agg([
+        pl.col("hp").mean().alias("avg_hp"),  # Calculate the mean of 'hp' and alias it as 'avg_hp'
+        pl.col("hp").min().alias("min_hp"),    # Calculate the minimum of 'hp' and alias it as 'min_hp'
+        pl.col("hp").max().alias("max_hp"),    # Calculate the maximum of 'hp' and alias it as 'max_hp'
+        pl.col("disp").sum().alias("totol_disp") # Calculate the sum of 'disp' and alias it as 'totol_disp'
+    ])
+)
+
+# Print the resulting aggregated DataFrame
+tbl_query
+```
+
+### count record and count distinct record
+
+```{python}
+# Group the mtcars DataFrame by the 'cyl' column and count the number of rows in each group
+mtcars.group_by("cyl").agg(pl.count().alias("n"))
+```
+
+```{python}
+# Group the mtcars DataFrame by the 'cyl' column and count the number of unique 'hp' values for each group
+mtcars.group_by("cyl").agg(pl.col("hp").n_unique().alias("n"))
+```
+
+## order rows
+
+```{python}
+# Sort the small_mtcars DataFrame by the 'hp' column in ascending order
+small_mtcars.sort("hp")
+```
+
+### Sort in descending order
+
+```{python}
+# Sort the small_mtcars DataFrame by the 'hp' column in descending order
+small_mtcars.sort("hp", descending=True)
+```
+
+### Arrange by multiple variables
+
+```{python}
+# Sort the small_mtcars DataFrame by 'cyl' in ascending order and 'mpg' in descending order
+small_mtcars.sort(
+    by=["cyl", "mpg"],
+    descending=[False, True]  # True means descending
+)
+```
+
+## join
+
+```{python}
+# Create a Polars DataFrame named lhs
+lhs = pl.DataFrame({'id': [1,2,3], 'val': ['lhs.1', 'lhs.2', 'lhs.3']})
+# Create a Polars DataFrame named rhs
+rhs = pl.DataFrame({'id': [1,2,4], 'val': ['rhs.1', 'rhs.2', 'rhs.3']})
+```
+
+```{python}
+# Display the lhs DataFrame
+lhs
+```
+
+```{python}
+# Display the rhs DataFrame
+rhs
+```
+
+### inner_join
+
+```{python}
+# Perform an inner join of lhs and rhs DataFrames on the 'id' column
+result = lhs.join(rhs, on="id", how="inner")
+# Display the result
+result
+```
+
+### full join
+
+```{python}
+# Perform a full outer join of lhs and rhs DataFrames on the 'id' column
+result = lhs.join(rhs, on="id", how="outer")
+# Display the result
+result
+```
+
+### left join
+
+```{python}
+# Perform a left join of lhs and rhs DataFrames on the 'id' column
+result = lhs.join(rhs, on="id", how="left")
+# Display the result
+result
+```
+
+### anti join
+
+keep data in left which not in right
+
+```{python}
+# Perform an anti-join: keep rows from lhs that do not have a match in rhs based on 'id'
+result = lhs.join(rhs, on="id", how="anti")
+# Display the result
+result
+```
+
+keep data in right which not in left
+
+```{python}
+# Perform an anti-join: keep rows from rhs that do not have a match in lhs based on 'id'
+result = rhs.join(lhs, on="id", how="anti")
+# Display the result
+result
+```
+
+## Reshape tables
+
+```{python}
+# Create a Polars DataFrame named costs
+costs = pl.DataFrame({
+    "id": [1, 2],
+    "price_x": [0.1, 0.2],
+    "price_y": [0.4, 0.5],
+    "price_z": [0.7, 0.8],
+})
+
+# Display the DataFrame
+costs
+```
+
+### Gather data long(wide to long)
+
+Below 3 method will give same result
+
+```{python}
+# Unpivot (melt) the costs DataFrame from wide to long format
+costs_long = costs.unpivot(
+    index="id",                # Columns to keep as identifiers
+    on=["price_x", "price_y", "price_z"],  # Columns to melt
+    variable_name="type",     # Name for the melted column names
+    value_name="price"        # Name for the melted values
+)
+
+# Display the long format DataFrame
+costs_long
+```
+
+
+### Spread data wide(long to wide)
+
+```{python}
+# Pivot the costs_long DataFrame from long to wide format
+costs_wide = costs_long.pivot(
+    values="price",
+    index="id",
+    on="type"  
+)
+
+# Display the wide format DataFrame
+costs_wide
+```
+
+
+
+## string
+
+```{python}
+# Create a Polars DataFrame named df
+df = pl.DataFrame({
+    "text": ["abc", "DDD", "1243c", "aeEe"],
+    "num": [3, 4, 7, 8]
+})
+# Display the DataFrame
+df
+```
+
+### upper case
+
+```{python}
+# Add a new column 'text_new' with the uppercase version of the 'text' column
+df.with_columns(
+    pl.col("text").str.to_uppercase().alias("text_new")
+)
+```
+
+### lower case
+
+```{python}
+# Add a new column 'text_new' with the lowercase version of the 'text' column
+df.with_columns(
+    pl.col("text").str.to_lowercase().alias("text_new")
+)
+```
+
+### match
+
+```{python}
+# Add multiple new columns based on string matching conditions
+df.with_columns([
+    # 'text_new1': 'T' if 'text' is exactly 'abc', else 'F'
+    pl.when(pl.col("text") == "abc").then(pl.lit("T")).otherwise(pl.lit("F")).alias("text_new1"),
+    # 'text_new2': 'T' if 'text' starts with 'a', else 'F'
+    pl.when(pl.col("text").str.starts_with("a")).then(pl.lit("T")).otherwise(pl.lit("F")).alias("text_new2"),
+    # 'text_new3': 'T' if 'text' ends with 'c', else 'F'
+    pl.when(pl.col("text").str.ends_with("c")).then(pl.lit("T")).otherwise(pl.lit("F")).alias("text_new3"),
+    # 'text_new4': 'T' if 'text' contains '4', else 'F'
+    pl.when(pl.col("text").str.contains("4")).then(pl.lit("T")).otherwise(pl.lit("F")).alias("text_new4"),
+])
+```
+
+### concatenation
+
+```{python}
+# Add a new column 'text_new1' by concatenating the 'text' column with itself, separated by " is "
+df.with_columns(
+    (pl.col("text") + " is " + pl.col("text")).alias("text_new1")
+)
+
+```
+
+### replace
+
+Use .str.replace(..., regex=True) with regular expressions to replace patterns in strings.
+
+For example, the code below uses "a.", where . is called a wildcard–which matches any character.
+
+```{python}
+# Add a new column 'text_new1' by replacing patterns in the 'text' column using a regular expression
+df.with_columns(
+    pl.col("text").str.replace(r"a.", "XX").alias("text_new1")
+)
+```
+
+### extract
+
+Use str.extract() with a regular expression to pull out a matching piece of text.
+
+text_new1 get rid of first 'a'
+
+text_new1 get rid of last 'c'
+
+
+```{python}
+# Add new columns by extracting substrings from the 'text' column using regular expressions
+df.with_columns([
+    # 'text_new1': extract everything after the first 'a'
+    pl.col("text").str.extract(r"a(.*)", 1).alias("text_new1"),
+    # 'text_new2': extract everything before the last 'c'
+    pl.col("text").str.extract(r"(.*)c", 1).alias("text_new2")
+])
+```
+
+## date
+
+Polars provides robust functionalities for handling date and time data, including parsing, extracting components, and formatting.
+
+```{python}
+
+# Create a Polars DataFrame with 'dates' and 'times' columns containing string representations of dates and times
+df_dates = pl.DataFrame({
+    "dates": ["2023-04-05", "2024-05-06"],
+    "times": ["2023-04-05 06:07:08", "2024-05-06 07:08:09"]
+})
+
+# Display the DataFrame
+df_dates
+```
+
+### Extracting Date Components
+
+You can extract various components like year, month, day, hour, minute, second from datetime objects.
+
+```python
+# Convert 'dates' to date type and extract year, month, day
+df_dates.with_columns([
+    pl.col("dates").str.to_date().dt.year().alias("year"),
+    pl.col("dates").str.to_date().dt.month().alias("month"),
+    pl.col("dates").str.to_date().dt.day().alias("day"),
+])
+```
+
+### Formatting Dates
+
+Dates can be formatted into different string representations using `strftime()`.
+
+```python
+# Convert 'times' to datetime type and format it as YYYY-MM-DD HH:MM:SS
+df_dates.with_columns(
+    pl.col("times").str.to_datetime().dt.strftime("%Y-%m-%d %H:%M:%S").alias("formatted_time")
+)
+```
+
+```{python}
+# Add new columns by converting string columns to datetime and date objects
+df_dates2 = df_dates.with_columns(
+    # Convert 'times' column to datetime objects and alias as 'real_times'
+    pl.col("times").str.to_datetime().alias("real_times"),
+    # Convert 'dates' column to date objects and alias as 'real_dates'
+    pl.col("dates").str.to_date().alias("real_dates")
+)
+# Display the DataFrame with new columns
+df_dates2
+
+```
+
+```{python}
+# Generate descriptive statistics for the df_dates2 DataFrame
+df_dates2.describe()
+```
+
+## using polars with database
+
+### set up a DuckDB database, with an mtcars table.
+
+```{python}
+# Connect to DuckDB (in-memory by default)
+con = duckdb.connect()
+
+# Sample mtcars data as a list of tuples
+mtcars_data = [
+    (21.0, 6, 160, 110, 3.90, 2.62, 16.46, 0, 1, 4, 4),
+    (21.0, 6, 160, 110, 3.90, 2.875, 17.02, 0, 1, 4, 4),
+    (22.8, 4, 108, 93, 3.85, 2.320, 18.61, 1, 1, 4, 1),
+    (21.4, 6, 258, 110, 3.08, 3.215, 19.44, 1, 0, 3, 1),
+]
+
+# Define column names for the DataFrame
+columns = [
+    "mpg", "cyl", "disp", "hp", "drat", "wt", "qsec",
+    "vs", "am", "gear", "carb"
+]
+
+# Create Polars DataFrame from the sample data and column names
+df = pl.DataFrame(mtcars_data, schema=columns)
+```
+
+### create table in duckdb
+
+```{python}
+# Register the Polars DataFrame 'df' as a table named 'mtcars' in the DuckDB connection
+con.register("mtcars", df)
+```
+
+
+### show tables in duckdb
+```{python}
+# Execute an SQL query to show all tables and fetch the results
+con.execute("SHOW TABLES").fetchall()
+```
+
+### create query
+```{python}
+# Define an SQL query to select 'mpg', 'cyl', and 'hp' from the 'mtcars' table where 'cyl' is 6
+query = "SELECT mpg, cyl, hp FROM mtcars WHERE cyl = 6"
+```
+
+
+### get data
+
+```{python}
+# Execute the SQL query and retrieve the result as a Polars DataFrame
+result = con.execute(query).pl()
+# Display the result
+result
+```
+
+
+
+### LazyFrame
+
+```{python}
+# Execute the SQL query and retrieve the result as a Polars LazyFrame
+lazy_df = con.execute(query).pl().lazy()
+# Display the LazyFrame
+lazy_df
+```
+
+### Collect to DataFrame
+
+because lazy expressions,the collect function is actually running the sql.
+
+```{python}
+# Collect the LazyFrame, executing the query and returning a Polars DataFrame
+result_df = lazy_df.collect()
+# Display the resulting DataFrame
+result_df
+```
+
+## reference:
+
+https://docs.pola.rs/api/python/stable/reference/index.html

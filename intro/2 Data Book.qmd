@@ -1,0 +1,75 @@
+---
+title: "Python Data Science Books"
+execute:
+  warning: false
+  error: false
+format:
+  html:
+    toc: true
+    toc-location: right
+    code-fold: show
+    code-tools: true
+    number-sections: true
+    code-block-bg: true
+    code-block-border-left: "#31BAE9"
+---
+
+# Python for Data Analysis
+
+by William McKinney
+
+![](images/91lrhlw-XcL._AC_UF1000,1000_QL80_.jpg){width="400"}
+
+# Introduction to Machine Learning with Python
+
+by Andreas C. Müller, Sarah Guido
+
+![](images/71vVxA5gH-L._AC_UF1000,1000_QL80_.jpg){width="400"}
+
+# Machine Learning with Python Cookbook
+
+by Chris Albon
+
+![](images/61JhQgL86KL._SL1020_.jpg){width="400"}
+
+# Data Wrangling with Python
+
+by Jacqueline Kazil (Author), Katharine Jarmul (Author)
+
+![](images/91VBqW7IcjL._AC_UF1000,1000_QL80_.jpg){width="400"}
+
+# A Course in Machine Learning
+
+by Hal Daumé
+
+![](images/large_4777d5e1c033c7bf.jpg){width="400"}
+
+# Think Stats
+
+by Allen B. Downey
+
+![](images/think_stats_cover.png){width="400"}
+
+# Think Bayes
+
+by Allen B. Downey
+
+![](images/91XVPG6K0kL._AC_UF1000,1000_QL80_.jpg){width="400"}
+
+# Think Like a Data Scientist
+
+by Brian Godsey
+
+![](images/61xgNKqsLJL._SL1500_.jpg){width="400"}
+
+# Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow
+
+by Aurélien Géron
+
+![](images/learning.oreilly.jpg){width="400"}
+
+# Deep Learning with Python
+
+By Francois Chollet
+
+![](images/Chollet-DLP-HI.png){width="400"}

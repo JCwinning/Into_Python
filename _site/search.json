@@ -1,0 +1,38 @@
+[
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "python2/install package.html",
+    "href": "python2/install package.html",
+    "title": "install pacakge",
+    "section": "",
+    "text": "1 package\n\n\nCode\ninstall.packages('tidyverse')\ninstall.packages('tidymodels')\n\n\n\n\n2 package version\n\n\nCode\nprint(\"tidyverse:\")\n\n\n[1] \"tidyverse:\"\n\n\nCode\npackageVersion(\"tidyverse\")\n\n\n[1] '2.0.0'\n\n\nCode\nprint(\"tidymodels:\")\n\n\n[1] \"tidymodels:\"\n\n\nCode\npackageVersion(\"tidymodels\")\n\n\n[1] '1.1.0'\n\n\n\n\nCode\nlibrary(tidyverse)\ntidyverse_packages()\n\n\n [1] \"broom\"         \"conflicted\"    \"cli\"           \"dbplyr\"       \n [5] \"dplyr\"         \"dtplyr\"        \"forcats\"       \"ggplot2\"      \n [9] \"googledrive\"   \"googlesheets4\" \"haven\"         \"hms\"          \n[13] \"httr\"          \"jsonlite\"      \"lubridate\"     \"magrittr\"     \n[17] \"modelr\"        \"pillar\"        \"purrr\"         \"ragg\"         \n[21] \"readr\"         \"readxl\"        \"reprex\"        \"rlang\"        \n[25] \"rstudioapi\"    \"rvest\"         \"stringr\"       \"tibble\"       \n[29] \"tidyr\"         \"xml2\"          \"tidyverse\"    \n\n\n\n\nCode\nlibrary(tidymodels)\ntidymodels_packages()\n\n\n [1] \"broom\"        \"cli\"          \"conflicted\"   \"dials\"        \"dplyr\"       \n [6] \"ggplot2\"      \"hardhat\"      \"infer\"        \"modeldata\"    \"parsnip\"     \n[11] \"purrr\"        \"recipes\"      \"rlang\"        \"rsample\"      \"rstudioapi\"  \n[16] \"tibble\"       \"tidyr\"        \"tune\"         \"workflows\"    \"workflowsets\"\n[21] \"yardstick\"    \"tidymodels\"",
+    "crumbs": [
+      "Python2",
+      "install pacakge"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "new modeling",
+    "section": "",
+    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites.\n\n1 + 1\n\n[1] 2"
+  },
+  {
+    "objectID": "python/install package.html",
+    "href": "python/install package.html",
+    "title": "install pacakge",
+    "section": "",
+    "text": "1 package\n\n\nCode\ninstall.packages('tidyverse')\ninstall.packages('tidymodels')\n\n\n\n\n2 package version\n\n\nCode\nprint(\"tidyverse:\")\n\n\n[1] \"tidyverse:\"\n\n\nCode\npackageVersion(\"tidyverse\")\n\n\n[1] '2.0.0'\n\n\nCode\nprint(\"tidymodels:\")\n\n\n[1] \"tidymodels:\"\n\n\nCode\npackageVersion(\"tidymodels\")\n\n\n[1] '1.1.0'\n\n\n\n\nCode\nlibrary(tidyverse)\ntidyverse_packages()\n\n\n [1] \"broom\"         \"conflicted\"    \"cli\"           \"dbplyr\"       \n [5] \"dplyr\"         \"dtplyr\"        \"forcats\"       \"ggplot2\"      \n [9] \"googledrive\"   \"googlesheets4\" \"haven\"         \"hms\"          \n[13] \"httr\"          \"jsonlite\"      \"lubridate\"     \"magrittr\"     \n[17] \"modelr\"        \"pillar\"        \"purrr\"         \"ragg\"         \n[21] \"readr\"         \"readxl\"        \"reprex\"        \"rlang\"        \n[25] \"rstudioapi\"    \"rvest\"         \"stringr\"       \"tibble\"       \n[29] \"tidyr\"         \"xml2\"          \"tidyverse\"    \n\n\n\n\nCode\nlibrary(tidymodels)\ntidymodels_packages()\n\n\n [1] \"broom\"        \"cli\"          \"conflicted\"   \"dials\"        \"dplyr\"       \n [6] \"ggplot2\"      \"hardhat\"      \"infer\"        \"modeldata\"    \"parsnip\"     \n[11] \"purrr\"        \"recipes\"      \"rlang\"        \"rsample\"      \"rstudioapi\"  \n[16] \"tibble\"       \"tidyr\"        \"tune\"         \"workflows\"    \"workflowsets\"\n[21] \"yardstick\"    \"tidymodels\"",
+    "crumbs": [
+      "Python",
+      "install pacakge"
+    ]
+  }
+]

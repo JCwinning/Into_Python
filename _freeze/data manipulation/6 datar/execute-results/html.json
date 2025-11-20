@@ -1,0 +1,12 @@
+{
+  "hash": "297440c5d643edb7b5a0a5a6a19c7bff",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Data manipulation with datar\"\nauthor: \"Tony Duan\"\n\nexecute:\n  warning: false\n  error: false\n  eval: false\n   \nformat:\n  html:\n    toc: true\n    toc-location: right\n    code-fold: show\n    code-tools: true\n    number-sections: true\n    code-block-bg: true\n    code-block-border-left: \"#31BAE9\"\n---\n\n\n\n```{bash}\n#| eval: false\npip install -U datar\npip install -U datar-numpy\n\n```\n\n# import pacakge\n\n::: {#5bde7143 .cell execution_count=1}\n``` {.python .cell-code}\nfrom datar import f\nfrom datar.dplyr import mutate, filter_, if_else\nfrom datar.tibble import tibble\nfrom datar.data import mtcars\n```\n:::\n\n\n::: {#23a58b8f .cell execution_count=2}\n``` {.python .cell-code}\ndf = tibble(\n    x=range(4),  # or c[:4]  (from datar.base import c)\n    y=['zero', 'one', 'two', 'three']\n)\n```\n:::\n\n\n::: {#21f3e201 .cell execution_count=3}\n``` {.python .cell-code}\ndat = group_by(mtcars, f.cyl)\n```\n:::\n\n\n# reference:\n\nhttps://github.com/pwwang/datar/\n\n",
+    "supporting": [
+      "6 datar_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

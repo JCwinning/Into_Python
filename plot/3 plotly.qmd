@@ -1,0 +1,301 @@
+---
+title: "Plotly Chart"
+execute:
+  warning: false
+  error: false
+  
+format:
+  html:
+    toc: true
+    toc-location: right
+    code-fold: show
+    code-tools: true
+    number-sections: true
+    code-block-bg: true
+    code-block-border-left: "#31BAE9"
+---
+
+![](images/Plotly-logo.png){width="650"}
+
+# Introduction to Plotly
+
+Plotly's Python graphing library makes it easy to create interactive, publication-quality graphs. This document demonstrates how to create various plots, including line plots, scatter plots, bar charts, box plots, histograms, and more.
+
+```{r}
+library(reticulate)
+py_require(c('plotly','pandas','seaborn','psutil','requests'))
+```
+
+```{python}
+import plotly
+print(plotly.__version__)
+```
+
+```{python}
+import seaborn as sns
+import plotly.express as px
+import pandas as pd
+
+# Load an example dataset
+tips = sns.load_dataset("tips")
+tips.head()
+```
+
+# Scatter Plot
+
+A scatter plot is used to visualize the relationship between two continuous variables.
+
+```{python}
+fig = px.scatter(tips, x="tip", y="total_bill")
+fig.show()
+```
+
+## Color by Group
+
+You can color the points based on a categorical variable to see how the relationship varies across different groups.
+
+```{python}
+fig = px.scatter(tips, x="tip", y="total_bill", color="sex")
+fig.show()
+```
+
+## Size by Group
+
+The size of the points can be mapped to a variable to add another dimension to the plot.
+
+```{python}
+fig = px.scatter(tips, x="tip", y="total_bill", size="size")
+fig.show()
+```
+
+# Line Plot
+
+A line plot is suitable for showing the trend of a variable over time.
+
+```{python}
+dowjones = sns.load_dataset("dowjones")
+dowjones.head()
+```
+
+```{python}
+import plotly.express as px
+fig = px.line(dowjones, x="Date", y="Price")
+fig.show()
+```
+
+## Line Plot with Dots
+You can also add markers to the line plot to highlight the data points.
+```{python}
+import plotly.express as px
+fig = px.line(dowjones, x="Date", y="Price", markers=True)
+fig.show()
+```
+
+## Color by Group
+
+You can plot multiple lines on the same plot to compare different groups.
+
+```{python}
+#| code-fold: true
+import random
+
+# Create datasets for comparison
+dowjones2 = dowjones.copy()
+dowjones2['type'] = 'old'
+
+dowjones3 = dowjones.copy()
+dowjones3['Price'] = dowjones3['Price'] + random.random() * 200
+dowjones3['type'] = 'new'
+
+dowjones4 = pd.concat([dowjones2, dowjones3], ignore_index=True)
+dowjones4 = dowjones4.sort_values('Date').reset_index(drop=True)
+```
+
+```{python}
+dowjones4.head()
+```
+
+```{python}
+import plotly.express as px
+fig = px.line(dowjones4, x="Date", y="Price", color='type')
+fig.show()
+```
+
+# Histogram
+
+A histogram visualizes the distribution of a single continuous variable.
+
+```{python}
+fig = px.histogram(tips, x="total_bill")
+fig.show()
+```
+
+## Color by Group
+
+You can create separate histograms for different groups to compare their distributions.
+
+```{python}
+fig = px.histogram(tips, x="total_bill", color='sex', barmode='group')
+fig.show()
+```
+
+# Bar Chart
+
+A bar chart is used to display categorical data with bars of lengths proportional to the values they represent.
+
+```{python}
+fig = px.bar(tips, x='sex', y='total_bill', color='sex')
+fig.show()
+```
+
+# Box Plot
+
+A box plot shows the distribution of a dataset, including the median, quartiles, and potential outliers.
+
+```{python}
+fig = px.box(tips, y="total_bill")
+fig.show()
+```
+
+## Color by Group
+
+You can group box plots by a categorical variable to compare distributions.
+
+```{python}
+fig = px.box(tips, y="total_bill", x='sex', color='sex')
+fig.show()
+```
+
+# Strip Plot
+
+A strip plot is a scatter plot for a categorical variable, showing the distribution of data points.
+
+```{python}
+fig = px.strip(tips, x="day", y="total_bill")
+fig.show()
+```
+
+## Color by Group
+
+You can color the points in a strip plot to distinguish between different groups.
+
+```{python}
+fig = px.strip(tips, x="day", y="total_bill", color='sex')
+fig.show()
+```
+
+# Facet Plot
+
+Facet plots create subplots for different subsets of the data, allowing for easy comparison.
+
+```{python}
+fig = px.scatter(tips, x="total_bill", y="tip", color="sex", facet_col="day")
+fig.show()
+```
+
+## Three Plots per Row
+
+You can control the layout of the facet grid by specifying the number of columns to wrap.
+
+```{python}
+fig = px.scatter(tips, x="total_bill", y="tip", color="sex", facet_col="day", facet_col_wrap=3)
+fig.show()
+```
+
+# Customizing Title, Size, and Axis Names
+
+## Add Title
+
+You can add a title to your plot and center it.
+
+```{python}
+fig = px.scatter(tips, x="tip", y="total_bill", title="Total Bill Title").update_layout(title_x=0.5)
+fig.show()
+```
+
+## Adjust Size
+
+The size of the plot can be customized to fit your needs.
+
+```{python}
+fig = px.scatter(tips, x="tip", y="total_bill")
+fig.update_layout(
+    autosize=False,
+    width=200,
+    height=200
+)
+fig.show()
+```
+
+## Change Axis Names
+
+You can change the labels of the x and y axes for clarity.
+
+```{python}
+fig = px.scatter(tips, x="tip", y="total_bill",
+                 labels={
+                     "tip": "New X Label",
+                     "total_bill": "New Y Label"
+                 })
+fig.show()
+```
+
+# Applying Themes
+
+Plotly offers several built-in themes to change the appearance of your plots.
+
+::: {.panel-tabset .nav-pills}
+
+## ggplot2 Theme
+
+This theme mimics the style of the popular `ggplot2` library in R.
+
+```{python}
+fig = px.scatter(tips, x="tip", y="total_bill", template="ggplot2")
+fig.show()
+```
+
+## Seaborn Theme
+
+This theme applies a style similar to the Seaborn library.
+
+```{python}
+fig = px.scatter(tips, x="tip", y="total_bill", template="seaborn")
+fig.show()
+```
+
+## Plotly Dark Theme
+
+This theme uses a dark background for a modern look.
+
+```{python}
+fig = px.scatter(tips, x="tip", y="total_bill", template="plotly_dark")
+fig.show()
+```
+
+:::
+
+# Saving a Plot
+
+To save a plot, you may need to install the `kaleido` package: `pip install -U kaleido`.
+
+```{python}
+df = px.data.gapminder().query("continent=='Oceania'")
+fig = px.line(df, x="year", y="lifeExp", title='Life expectancy in Canada')
+```
+
+# Animated Plot
+
+Plotly supports animations for many chart types, though smooth transitions are best supported for scatter and bar plots. More information can be found [here](https://plotly.com/python/animations/).
+
+```{python}
+import plotly.express as px
+df = px.data.gapminder()
+px.scatter(df, x="gdpPercap", y="lifeExp", animation_frame="year", animation_group="country",
+           size="pop", color="continent", hover_name="country",
+           log_x=True, size_max=55, range_x=[100, 100000], range_y=[25, 90])
+```
+
+# Reference
+
+- [Plotly Python Library](https://plotly.com/python/)

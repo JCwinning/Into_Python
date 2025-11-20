@@ -1,0 +1,15 @@
+{
+  "hash": "14b58870d49c62928d4f83589969cea0",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Using marimo python in quarto\"\nauthor: \"Tony Duan\"\nexecute:\n  warning: false\n  error: false\n\n  \nformat:\n  html:\n    toc: true\n    toc-location: right\n    code-fold: show\n    code-tools: true\n    \n    code-block-bg: true\n    code-block-border-left: \"#31BAE9\"\n    code-copy: true\n\n\nfilters:\n    - marimo-team/marimo\n---\n\n\n::: {.cell}\n\n```{.r .cell-code}\nlibrary(reticulate)\npy_require(c(\"wigglystuff\",\"marimo\"))\n```\n:::\n\n\n# Uinsg marimo in quarto\n\n##  Add quarto-marimo to your project\n\n\n::: {.cell}\n\n```{.base .cell-code}\nquarto add marimo-team/quarto-marimo\n```\n:::\n\n\n## Add filters in YAML header\n\n````\n---\nfilters:\n    - marimo-team/marimo\n---\n````\n  \n  \n  \n# add code in quaro\n\n## slider bar\n\n```python {.marimo}\n#| echo: true\nimport marimo as mo\nslider = mo.ui.slider(1, 500, 1, label=\"Look, a slider!\",full_width=True)\nslider\n```\n\nprint out slider value\n\n```python {.marimo}\n#| echo: true\nslider.value\n```\n\nprint out slider value number of 🍃\n\n\n```python {.marimo}\n#| echo: true\nmo.md(\"🍃\" * slider.value + \"～～～～!\")\n```\n\n## slider number\n\n```python {.marimo}\n#| echo: true\nfrom wigglystuff import TangleSlider\n\ncoffees = mo.ui.anywidget(\n  TangleSlider(amount=10.0, min_value=0.0, step=1, suffix=\" coffees\" , digits=0)\n)\n\nprice = mo.ui.anywidget(\nTangleSlider(amount=3.50, min_value=0.01, max_value=10, step=0.01, prefix=\"$\",digits=2\n)\n\n)\n\n```\n\n\n```python {.marimo}\n#| echo: true\ntotal = coffees.amount * price.amount\ntotal\n```\n\n\n\n\n```python {.marimo}\n#| echo: true\nmo.md(f\"\"\"\n### coffee billing:\n\nyou have {coffees} with  {price} and the total spending is ${total:.2f}\n\"\"\"\n)\n```\n\n\n# Reference\n\nhttps://github.com/marimo-team/quarto-marimo\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

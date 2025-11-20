@@ -1,0 +1,2299 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Plotnine Chart – Python Handbook</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../download.jpg" rel="icon" type="image/jpeg">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-ae9f755833c5a42eb17aad6995ed9c2c.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../download.jpg" alt="" class="navbar-logo light-content">
+    <img src="../download.jpg" alt="" class="navbar-logo dark-content">
+    </a>
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Python Handbook</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link active" href="../index.html" aria-current="page"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-intro" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">intro</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-intro">    
+        <li class="dropdown-header">Intro</li>
+        <li>
+    <a class="dropdown-item" href="../intro/0 Basic python.html">
+ <span class="dropdown-text">Basic Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../intro/1 Python Book.html">
+ <span class="dropdown-text">Python Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../intro/2 Data Book.html">
+ <span class="dropdown-text">Python Data Science Books</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../intro/3 statistic Book.html">
+ <span class="dropdown-text">Statistics Books</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-data" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Data</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-data">    
+        <li class="dropdown-header">data manipulation</li>
+        <li>
+    <a class="dropdown-item" href="../data manipulation/1 input output.html">
+ <span class="dropdown-text">Input &amp; Output in Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data manipulation/2 data structure in Python .html">
+ <span class="dropdown-text">Data Structures in Python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data manipulation/3 Pandas.html">
+ <span class="dropdown-text">Data manipulation with Pandas</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data manipulation/4 polar.html">
+ <span class="dropdown-text">Data manipulation with polars</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data manipulation/5 SQL database.html">
+ <span class="dropdown-text">SQL database with python</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../data manipulation/6 siuba.html">
+ <span class="dropdown-text">Data manipulation with siuba</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-plotting" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Plotting</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-plotting">    
+        <li class="dropdown-header">Plot</li>
+        <li>
+    <a class="dropdown-item" href="../plot/1 seaborn.html">
+ <span class="dropdown-text">Seaborn Chart</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../plot/2 plotnine.html">
+ <span class="dropdown-text">Plotnine Chart</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../plot/3 plotly.html">
+ <span class="dropdown-text">Plotly Chart</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-publish" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Publish</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-publish">    
+        <li class="dropdown-header">Publish</li>
+        <li>
+    <a class="dropdown-item" href="../Publish/Shiny/shiny intro.html">
+ <span class="dropdown-text">Shiny</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-other" role="link" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Other</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-other">    
+        <li class="dropdown-header">Other</li>
+        <li>
+    <a class="dropdown-item" href="../other/web_scraping/web scrap.html">
+ <span class="dropdown-text">Web Scraping</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../plot/1 seaborn.html">Plot</a></li><li class="breadcrumb-item"><a href="../plot/2 plotnine.html">Plotnine Chart</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
+      <a href="../index.html" class="sidebar-logo-link">
+      </a>
+      </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Plot</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../plot/1 seaborn.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Seaborn Chart</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../plot/2 plotnine.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Plotnine Chart</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../plot/3 plotly.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Plotly Chart</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction-to-plotnine" id="toc-introduction-to-plotnine" class="nav-link active" data-scroll-target="#introduction-to-plotnine"><span class="header-section-number">1</span> Introduction to Plotnine</a></li>
+  <li><a href="#scatter-plot" id="toc-scatter-plot" class="nav-link" data-scroll-target="#scatter-plot"><span class="header-section-number">2</span> Scatter Plot</a>
+  <ul class="collapse">
+  <li><a href="#color-by-group" id="toc-color-by-group" class="nav-link" data-scroll-target="#color-by-group"><span class="header-section-number">2.1</span> Color by Group</a></li>
+  <li><a href="#size-by-group" id="toc-size-by-group" class="nav-link" data-scroll-target="#size-by-group"><span class="header-section-number">2.2</span> Size by Group</a></li>
+  </ul></li>
+  <li><a href="#line-plot" id="toc-line-plot" class="nav-link" data-scroll-target="#line-plot"><span class="header-section-number">3</span> Line Plot</a>
+  <ul class="collapse">
+  <li><a href="#line-plot-with-dots" id="toc-line-plot-with-dots" class="nav-link" data-scroll-target="#line-plot-with-dots"><span class="header-section-number">3.1</span> Line Plot with Dots</a></li>
+  <li><a href="#color-by-group-1" id="toc-color-by-group-1" class="nav-link" data-scroll-target="#color-by-group-1"><span class="header-section-number">3.2</span> Color by Group</a></li>
+  </ul></li>
+  <li><a href="#histogram" id="toc-histogram" class="nav-link" data-scroll-target="#histogram"><span class="header-section-number">4</span> Histogram</a>
+  <ul class="collapse">
+  <li><a href="#color-by-group-2" id="toc-color-by-group-2" class="nav-link" data-scroll-target="#color-by-group-2"><span class="header-section-number">4.1</span> Color by Group</a></li>
+  </ul></li>
+  <li><a href="#bar-chart" id="toc-bar-chart" class="nav-link" data-scroll-target="#bar-chart"><span class="header-section-number">5</span> Bar Chart</a></li>
+  <li><a href="#box-plot" id="toc-box-plot" class="nav-link" data-scroll-target="#box-plot"><span class="header-section-number">6</span> Box Plot</a>
+  <ul class="collapse">
+  <li><a href="#color-by-group-3" id="toc-color-by-group-3" class="nav-link" data-scroll-target="#color-by-group-3"><span class="header-section-number">6.1</span> Color by Group</a></li>
+  </ul></li>
+  <li><a href="#strip-plot" id="toc-strip-plot" class="nav-link" data-scroll-target="#strip-plot"><span class="header-section-number">7</span> Strip Plot</a>
+  <ul class="collapse">
+  <li><a href="#color-by-group-4" id="toc-color-by-group-4" class="nav-link" data-scroll-target="#color-by-group-4"><span class="header-section-number">7.1</span> Color by Group</a></li>
+  </ul></li>
+  <li><a href="#facet-plot" id="toc-facet-plot" class="nav-link" data-scroll-target="#facet-plot"><span class="header-section-number">8</span> Facet Plot</a>
+  <ul class="collapse">
+  <li><a href="#three-plots-per-row" id="toc-three-plots-per-row" class="nav-link" data-scroll-target="#three-plots-per-row"><span class="header-section-number">8.1</span> Three Plots per Row</a></li>
+  </ul></li>
+  <li><a href="#customizing-title-size-and-axis-names" id="toc-customizing-title-size-and-axis-names" class="nav-link" data-scroll-target="#customizing-title-size-and-axis-names"><span class="header-section-number">9</span> Customizing Title, Size, and Axis Names</a>
+  <ul class="collapse">
+  <li><a href="#add-title" id="toc-add-title" class="nav-link" data-scroll-target="#add-title"><span class="header-section-number">9.1</span> Add Title</a></li>
+  <li><a href="#adjust-size" id="toc-adjust-size" class="nav-link" data-scroll-target="#adjust-size"><span class="header-section-number">9.2</span> Adjust Size</a></li>
+  <li><a href="#change-axis-names" id="toc-change-axis-names" class="nav-link" data-scroll-target="#change-axis-names"><span class="header-section-number">9.3</span> Change Axis Names</a></li>
+  </ul></li>
+  <li><a href="#applying-themes" id="toc-applying-themes" class="nav-link" data-scroll-target="#applying-themes"><span class="header-section-number">10</span> Applying Themes</a></li>
+  <li><a href="#saving-a-plot" id="toc-saving-a-plot" class="nav-link" data-scroll-target="#saving-a-plot"><span class="header-section-number">11</span> Saving a Plot</a></li>
+  <li><a href="#animated-plot" id="toc-animated-plot" class="nav-link" data-scroll-target="#animated-plot"><span class="header-section-number">12</span> Animated Plot</a></li>
+  <li><a href="#reference" id="toc-reference" class="nav-link" data-scroll-target="#reference"><span class="header-section-number">13</span> Reference</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../plot/1 seaborn.html">Plot</a></li><li class="breadcrumb-item"><a href="../plot/2 plotnine.html">Plotnine Chart</a></li></ol></nav>
+<div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">Plotnine Chart</h1><button type="button" class="btn code-tools-button dropdown-toggle" id="quarto-code-tools-menu" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi"></i> Code</button><ul class="dropdown-menu dropdown-menu-end" aria-labelelledby="quarto-code-tools-menu"><li><a id="quarto-show-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Show All Code</a></li><li><a id="quarto-hide-all-code" class="dropdown-item" href="javascript:void(0)" role="button">Hide All Code</a></li><li><hr class="dropdown-divider"></li><li><a id="quarto-view-source" class="dropdown-item" href="javascript:void(0)" role="button">View Source</a></li></ul></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><img src="images/logo-540.png" class="img-fluid" width="300"></p>
+<section id="introduction-to-plotnine" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction to Plotnine</h1>
+<p>Plotnine is a Python implementation of the Grammar of Graphics, inspired by R’s <code>ggplot2</code>. It allows you to create complex and beautiful plots by adding layers of data, aesthetics, and geoms. This document provides a guide to creating various plots with Plotnine.</p>
+<div id="1bb870b9" class="cell" data-execution_count="1">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotnine</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(plotnine.__version__)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>0.14.5</code></pre>
+</div>
+</div>
+<div id="c526947c" class="cell" data-execution_count="2">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an example dataset</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>tips <span class="op">=</span> sns.load_dataset(<span class="st">"tips"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>tips.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">total_bill</th>
+<th data-quarto-table-cell-role="th">tip</th>
+<th data-quarto-table-cell-role="th">sex</th>
+<th data-quarto-table-cell-role="th">smoker</th>
+<th data-quarto-table-cell-role="th">day</th>
+<th data-quarto-table-cell-role="th">time</th>
+<th data-quarto-table-cell-role="th">size</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>16.99</td>
+<td>1.01</td>
+<td>Female</td>
+<td>No</td>
+<td>Sun</td>
+<td>Dinner</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>10.34</td>
+<td>1.66</td>
+<td>Male</td>
+<td>No</td>
+<td>Sun</td>
+<td>Dinner</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>21.01</td>
+<td>3.50</td>
+<td>Male</td>
+<td>No</td>
+<td>Sun</td>
+<td>Dinner</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>23.68</td>
+<td>3.31</td>
+<td>Male</td>
+<td>No</td>
+<td>Sun</td>
+<td>Dinner</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>24.59</td>
+<td>3.61</td>
+<td>Female</td>
+<td>No</td>
+<td>Sun</td>
+<td>Dinner</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="scatter-plot" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Scatter Plot</h1>
+<p>A scatter plot is used to visualize the relationship between two continuous variables.</p>
+<div id="87ddf5f8" class="cell" data-execution_count="3">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, y<span class="op">=</span><span class="st">"total_bill"</span>) <span class="op">+</span> geom_point()</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-4-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="color-by-group" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="color-by-group"><span class="header-section-number">2.1</span> Color by Group</h2>
+<p>You can color the points based on a categorical variable to see how the relationship varies across different groups.</p>
+<div id="5d9dd49b" class="cell" data-execution_count="4">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, y<span class="op">=</span><span class="st">"total_bill"</span>) <span class="op">+</span> geom_point(aes(color<span class="op">=</span><span class="st">"sex"</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-5-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="size-by-group" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="size-by-group"><span class="header-section-number">2.2</span> Size by Group</h2>
+<p>The size of the points can be mapped to a variable to add another dimension to the plot.</p>
+<div id="7d9fb918" class="cell" data-execution_count="5">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, y<span class="op">=</span><span class="st">"total_bill"</span>, size<span class="op">=</span><span class="st">"size"</span>) <span class="op">+</span> geom_point()</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-6-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="line-plot" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Line Plot</h1>
+<p>A line plot is suitable for showing the trend of a variable over time.</p>
+<div id="0e78827f" class="cell" data-execution_count="6">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dowjones <span class="op">=</span> sns.load_dataset(<span class="st">"dowjones"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>dowjones.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Date</th>
+<th data-quarto-table-cell-role="th">Price</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>1914-12-01</td>
+<td>55.00</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>1915-01-01</td>
+<td>56.55</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>1915-02-01</td>
+<td>56.00</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>1915-03-01</td>
+<td>58.30</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>1915-04-01</td>
+<td>66.45</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="f9d0ad85" class="cell" data-execution_count="7">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>dowjones) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"Date"</span>, y<span class="op">=</span><span class="st">"Price"</span>) <span class="op">+</span> geom_line()</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-8-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="line-plot-with-dots" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="line-plot-with-dots"><span class="header-section-number">3.1</span> Line Plot with Dots</h2>
+<p>You can also add markers to the line plot to highlight the data points.</p>
+<div id="005fa068" class="cell" data-execution_count="8">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>dowjones) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"Date"</span>, y<span class="op">=</span><span class="st">"Price"</span>) <span class="op">+</span> geom_line() <span class="op">+</span> geom_point()</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-9-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="825c288f" class="cell" data-execution_count="9">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Create datasets for comparison</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>dowjones2 <span class="op">=</span> dowjones.copy()</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>dowjones2[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'old'</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>dowjones3 <span class="op">=</span> dowjones.copy()</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>dowjones3[<span class="st">'Price'</span>] <span class="op">=</span> dowjones3[<span class="st">'Price'</span>] <span class="op">+</span> random.random() <span class="op">*</span> <span class="dv">200</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>dowjones3[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'new'</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>dowjones4 <span class="op">=</span> pd.concat([dowjones2, dowjones3], ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>dowjones4 <span class="op">=</span> dowjones4.sort_values(<span class="st">'Date'</span>).reset_index(drop<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="c441548e" class="cell" data-execution_count="10">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>dowjones4.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">Date</th>
+<th data-quarto-table-cell-role="th">Price</th>
+<th data-quarto-table-cell-role="th">type</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">0</th>
+<td>1914-12-01</td>
+<td>55.000000</td>
+<td>old</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">1</th>
+<td>1914-12-01</td>
+<td>57.601244</td>
+<td>new</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">2</th>
+<td>1915-01-01</td>
+<td>59.151244</td>
+<td>new</td>
+</tr>
+<tr class="even">
+<th data-quarto-table-cell-role="th">3</th>
+<td>1915-01-01</td>
+<td>56.550000</td>
+<td>old</td>
+</tr>
+<tr class="odd">
+<th data-quarto-table-cell-role="th">4</th>
+<td>1915-02-01</td>
+<td>56.000000</td>
+<td>old</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="color-by-group-1" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="color-by-group-1"><span class="header-section-number">3.2</span> Color by Group</h2>
+<p>You can plot multiple lines on the same plot to compare different groups.</p>
+<div id="8082adf3" class="cell" data-execution_count="11">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>dowjones4) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"Date"</span>, y<span class="op">=</span><span class="st">"Price"</span>) <span class="op">+</span> geom_line(aes(color<span class="op">=</span><span class="st">"type"</span>))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-12-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="histogram" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Histogram</h1>
+<p>A histogram visualizes the distribution of a single continuous variable.</p>
+<div id="97525069" class="cell" data-execution_count="12">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>) <span class="op">+</span> geom_histogram()</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-13-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="color-by-group-2" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="color-by-group-2"><span class="header-section-number">4.1</span> Color by Group</h2>
+<p>You can create separate histograms for different groups to compare their distributions.</p>
+<div id="3ac07318" class="cell" data-execution_count="13">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, fill<span class="op">=</span><span class="st">'sex'</span>) <span class="op">+</span> geom_histogram(position<span class="op">=</span><span class="st">'dodge'</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-14-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="bar-chart" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Bar Chart</h1>
+<p>A bar chart is used to display categorical data with bars of lengths proportional to the values they represent.</p>
+<div id="704b88d6" class="cell" data-execution_count="14">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">'sex'</span>, y<span class="op">=</span><span class="st">'tip'</span>, fill<span class="op">=</span><span class="st">"sex"</span>) <span class="op">+</span> geom_col()</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-15-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="box-plot" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Box Plot</h1>
+<p>A box plot shows the distribution of a dataset, including the median, quartiles, and potential outliers.</p>
+<div id="d88de3aa" class="cell" data-execution_count="15">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">'day'</span>, y<span class="op">=</span><span class="st">'tip'</span>, fill<span class="op">=</span><span class="st">"day"</span>) <span class="op">+</span> geom_boxplot()</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-16-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="color-by-group-3" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="color-by-group-3"><span class="header-section-number">6.1</span> Color by Group</h2>
+<p>You can group box plots by a categorical variable to compare distributions.</p>
+<div id="624af765" class="cell" data-execution_count="16">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">'day'</span>, y<span class="op">=</span><span class="st">'tip'</span>, fill<span class="op">=</span><span class="st">"sex"</span>) <span class="op">+</span> geom_boxplot()</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-17-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="strip-plot" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Strip Plot</h1>
+<p>A strip plot is a scatter plot for a categorical variable, showing the distribution of data points.</p>
+<div id="d574613c" class="cell" data-execution_count="17">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">'day'</span>, y<span class="op">=</span><span class="st">'tip'</span>) <span class="op">+</span> geom_jitter(width<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-18-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="color-by-group-4" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="color-by-group-4"><span class="header-section-number">7.1</span> Color by Group</h2>
+<p>You can color the points in a strip plot to distinguish between different groups.</p>
+<div id="7ee0b7dd" class="cell" data-execution_count="18">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">'day'</span>, y<span class="op">=</span><span class="st">'tip'</span>, fill<span class="op">=</span><span class="st">"sex"</span>) <span class="op">+</span> geom_jitter(position<span class="op">=</span>position_jitterdodge())</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-19-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="facet-plot" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Facet Plot</h1>
+<p>Facet plots create subplots for different subsets of the data, allowing for easy comparison.</p>
+<div id="42eb23ba" class="cell" data-execution_count="19">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, y<span class="op">=</span><span class="st">"total_bill"</span>) <span class="op">+</span> geom_point(aes(color<span class="op">=</span><span class="st">"sex"</span>))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_wrap(<span class="st">"day"</span>)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-20-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="three-plots-per-row" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="three-plots-per-row"><span class="header-section-number">8.1</span> Three Plots per Row</h2>
+<p>You can control the layout of the facet grid by specifying the number of columns.</p>
+<div id="4b9174cd" class="cell" data-execution_count="20">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, y<span class="op">=</span><span class="st">"total_bill"</span>) <span class="op">+</span> geom_point(aes(color<span class="op">=</span><span class="st">"sex"</span>))</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_wrap(<span class="st">"day"</span>, ncol<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-21-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="customizing-title-size-and-axis-names" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Customizing Title, Size, and Axis Names</h1>
+<section id="add-title" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="add-title"><span class="header-section-number">9.1</span> Add Title</h2>
+<p>You can add a title to your plot to provide context.</p>
+<div id="0aba0eee" class="cell" data-execution_count="21">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, fill<span class="op">=</span><span class="st">'sex'</span>) <span class="op">+</span> geom_histogram(position<span class="op">=</span><span class="st">'dodge'</span>) <span class="op">+</span> ggtitle(<span class="st">"Tip by Sex"</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-22-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="adjust-size" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="adjust-size"><span class="header-section-number">9.2</span> Adjust Size</h2>
+<p>The size of the plot can be customized to fit your needs.</p>
+<div id="92ac8f4a" class="cell" data-execution_count="22">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, fill<span class="op">=</span><span class="st">'sex'</span>) <span class="op">+</span> geom_histogram(position<span class="op">=</span><span class="st">'dodge'</span>) <span class="op">+</span> ggtitle(<span class="st">"Tip by Sex"</span>) <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">3</span>))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-23-output-1.png" width="384" height="288" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="change-axis-names" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="change-axis-names"><span class="header-section-number">9.3</span> Change Axis Names</h2>
+<p>You can change the labels of the x and y axes for clarity.</p>
+<div id="53c1c1c6" class="cell" data-execution_count="23">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, y<span class="op">=</span><span class="st">"total_bill"</span>) <span class="op">+</span> geom_point() <span class="op">+</span> scale_x_continuous(name<span class="op">=</span><span class="st">"New X Name"</span>) <span class="op">+</span> scale_y_continuous(name<span class="op">=</span><span class="st">"New Y Name"</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-24-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="applying-themes" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Applying Themes</h1>
+<p>Plotnine offers several built-in themes to change the appearance of your plots. You can find all themes <a href="https://github.com/has2k1/plotnine/tree/main/plotnine/themes">here</a>.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset nav-pills">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="">xkcd Theme</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">theme_538</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">theme_dark</a></li></ul>
+<div class="tab-content nav-pills">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>This theme gives your plots a hand-drawn, xkcd-style look.</p>
+<div id="ce194a5a" class="cell" data-execution_count="24">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, fill<span class="op">=</span><span class="st">'sex'</span>) <span class="op">+</span> geom_histogram(position<span class="op">=</span><span class="st">'dodge'</span>) <span class="op">+</span> theme_xkcd()</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-25-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>This theme mimics the style of the FiveThirtyEight website.</p>
+<div id="471d58be" class="cell" data-execution_count="25">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, fill<span class="op">=</span><span class="st">'sex'</span>) <span class="op">+</span> geom_histogram(position<span class="op">=</span><span class="st">'dodge'</span>) <span class="op">+</span> theme_538()</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-26-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p>This theme uses a dark background for a modern look.</p>
+<div id="c0adca33" class="cell" data-execution_count="26">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, fill<span class="op">=</span><span class="st">'sex'</span>) <span class="op">+</span> geom_histogram(position<span class="op">=</span><span class="st">'dodge'</span>) <span class="op">+</span> theme_dark()</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>p</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="2 plotnine_files/figure-html/cell-27-output-1.png" width="672" height="480" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="saving-a-plot" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> Saving a Plot</h1>
+<p>You can save your plot to a file in various formats.</p>
+<div id="6b7637ef" class="cell" data-execution_count="27">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, fill<span class="op">=</span><span class="st">'sex'</span>) <span class="op">+</span> geom_histogram(position<span class="op">=</span><span class="st">'dodge'</span>) <span class="op">+</span> theme_dark()</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>p.save(filename<span class="op">=</span><span class="st">'test3.png'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+</section>
+<section id="animated-plot" class="level1" data-number="12">
+<h1 data-number="12"><span class="header-section-number">12</span> Animated Plot</h1>
+<p>Plotnine can also be used to create animated plots.</p>
+<div id="43734ec4" class="cell" data-execution_count="28">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.animation <span class="im">import</span> PlotnineAnimation</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="2d11b56b" class="cell" data-execution_count="29">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> dowjones4.sample(<span class="dv">50</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> new_data.sort_values(by<span class="op">=</span>[<span class="st">'Date'</span>], ascending<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot(x):</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    df2 <span class="op">=</span> dowjones4.query(<span class="st">'Date &lt;= @x'</span>)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> (</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>        ggplot(df2, aes(x<span class="op">=</span><span class="st">'Date'</span>, y<span class="op">=</span><span class="st">'Price'</span>))</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> geom_line(aes(color<span class="op">=</span><span class="st">"type"</span>))</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> theme(subplots_adjust<span class="op">=</span>{<span class="st">'right'</span>: <span class="fl">0.85</span>})</span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>plots <span class="op">=</span> (plot(i) <span class="cf">for</span> i <span class="kw">in</span> new_data[<span class="st">"Date"</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+</div>
+<div id="3bf0b8b5" class="cell" data-execution_count="30">
+<details open="" class="code-fold">
+<summary>Code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> rc</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>rc(<span class="st">"animation"</span>, html<span class="op">=</span><span class="st">"html5"</span>)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>animation <span class="op">=</span> PlotnineAnimation(plots, interval<span class="op">=</span><span class="dv">300</span>, repeat_delay<span class="op">=</span><span class="dv">500</span>)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>animation</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="30">
+<video width="672" height="480" controls="" autoplay="" loop="">
+  <source type="video/mp4" src="data:video/mp4;base64,AAAAIGZ0eXBNNFYgAAACAE00ViBpc29taXNvMmF2YzEAAAAIZnJlZQAATohtZGF0AAACrgYF//+q
+3EXpvebZSLeWLNgg2SPu73gyNjQgLSBjb3JlIDE2NCByMzEwOCAzMWUxOWY5IC0gSC4yNjQvTVBF
+Ry00IEFWQyBjb2RlYyAtIENvcHlsZWZ0IDIwMDMtMjAyMyAtIGh0dHA6Ly93d3cudmlkZW9sYW4u
+b3JnL3gyNjQuaHRtbCAtIG9wdGlvbnM6IGNhYmFjPTEgcmVmPTMgZGVibG9jaz0xOjA6MCBhbmFs
+eXNlPTB4MzoweDExMyBtZT1oZXggc3VibWU9NyBwc3k9MSBwc3lfcmQ9MS4wMDowLjAwIG1peGVk
+X3JlZj0xIG1lX3JhbmdlPTE2IGNocm9tYV9tZT0xIHRyZWxsaXM9MSA4eDhkY3Q9MSBjcW09MCBk
+ZWFkem9uZT0yMSwxMSBmYXN0X3Bza2lwPTEgY2hyb21hX3FwX29mZnNldD0tMiB0aHJlYWRzPTEy
+IGxvb2thaGVhZF90aHJlYWRzPTIgc2xpY2VkX3RocmVhZHM9MCBucj0wIGRlY2ltYXRlPTEgaW50
+ZXJsYWNlZD0wIGJsdXJheV9jb21wYXQ9MCBjb25zdHJhaW5lZF9pbnRyYT0wIGJmcmFtZXM9MyBi
+X3B5cmFtaWQ9MiBiX2FkYXB0PTEgYl9iaWFzPTAgZGlyZWN0PTEgd2VpZ2h0Yj0xIG9wZW5fZ29w
+PTAgd2VpZ2h0cD0yIGtleWludD0yNTAga2V5aW50X21pbj0zIHNjZW5lY3V0PTQwIGludHJhX3Jl
+ZnJlc2g9MCByY19sb29rYWhlYWQ9NDAgcmM9Y3JmIG1idHJlZT0xIGNyZj0yMy4wIHFjb21wPTAu
+NjAgcXBtaW49MCBxcG1heD02OSBxcHN0ZXA9NCBpcF9yYXRpbz0xLjQwIGFxPTE6MS4wMACAAABE
+LWWIhAAV//73ye/AputbW7W/k7V/NUwOZ8QnIEOxsJj4arA2fsqfaabIyu41IDqf/ZtpkK/396BB
+5OyYncg9GHa/rjD7wrpllCCRgGD6f0EdhMJgik3wIcRWbpwpqZBzwHLC5OXDr85OXed2VCG8KJk8
++q6mmt2ZQj1eBvb5ZZVKfZX/4CCgPZ4MVVEPfo/m8tNQSHiAdfYLKG54xLXBTQHWe+MekQHGiiUl
+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
+AAAATGF2ZjYxLjcuMTAw
+">
+  Your browser does not support the video tag.
+</video>
+</div>
+</div>
+</section>
+<section id="reference" class="level1" data-number="13">
+<h1 data-number="13"><span class="header-section-number">13</span> Reference</h1>
+<ul>
+<li><a href="https://plotnine.org/">Plotnine Official Documentation</a></li>
+</ul>
+
+
+<!-- -->
+
+</section>
+
+<a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Plotnine Chart"</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co">  error: false</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="co">  html:</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a><span class="co">    toc: true</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a><span class="co">    toc-location: right</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="co">    code-fold: show</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a><span class="co">    code-tools: true</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a><span class="co">    number-sections: true</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a><span class="co">    code-block-bg: true</span></span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a><span class="co">    code-block-border-left: "#31BAE9"</span></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a><span class="al">![](images/logo-540.png)</span>{width="300"}</span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a><span class="fu"># Introduction to Plotnine</span></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>Plotnine is a Python implementation of the Grammar of Graphics, inspired by R's <span class="in">`ggplot2`</span>. It allows you to create complex and beautiful plots by adding layers of data, aesthetics, and geoms. This document provides a guide to creating various plots with Plotnine.</span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotnine</span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(plotnine.__version__)</span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-34"><a href="#cb32-34" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb32-35"><a href="#cb32-35" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb32-36"><a href="#cb32-36" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb32-37"><a href="#cb32-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-38"><a href="#cb32-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Load an example dataset</span></span>
+<span id="cb32-39"><a href="#cb32-39" aria-hidden="true" tabindex="-1"></a>tips <span class="op">=</span> sns.load_dataset(<span class="st">"tips"</span>)</span>
+<span id="cb32-40"><a href="#cb32-40" aria-hidden="true" tabindex="-1"></a>tips.head()</span>
+<span id="cb32-41"><a href="#cb32-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-42"><a href="#cb32-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-43"><a href="#cb32-43" aria-hidden="true" tabindex="-1"></a><span class="fu"># Scatter Plot</span></span>
+<span id="cb32-44"><a href="#cb32-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-45"><a href="#cb32-45" aria-hidden="true" tabindex="-1"></a>A scatter plot is used to visualize the relationship between two continuous variables.</span>
+<span id="cb32-46"><a href="#cb32-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-49"><a href="#cb32-49" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-50"><a href="#cb32-50" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-51"><a href="#cb32-51" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, y<span class="op">=</span><span class="st">"total_bill"</span>) <span class="op">+</span> geom_point()</span>
+<span id="cb32-52"><a href="#cb32-52" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-53"><a href="#cb32-53" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-54"><a href="#cb32-54" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-55"><a href="#cb32-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-56"><a href="#cb32-56" aria-hidden="true" tabindex="-1"></a><span class="fu">## Color by Group</span></span>
+<span id="cb32-57"><a href="#cb32-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-58"><a href="#cb32-58" aria-hidden="true" tabindex="-1"></a>You can color the points based on a categorical variable to see how the relationship varies across different groups.</span>
+<span id="cb32-59"><a href="#cb32-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-62"><a href="#cb32-62" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-63"><a href="#cb32-63" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-64"><a href="#cb32-64" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, y<span class="op">=</span><span class="st">"total_bill"</span>) <span class="op">+</span> geom_point(aes(color<span class="op">=</span><span class="st">"sex"</span>))</span>
+<span id="cb32-65"><a href="#cb32-65" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-66"><a href="#cb32-66" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-67"><a href="#cb32-67" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-68"><a href="#cb32-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-69"><a href="#cb32-69" aria-hidden="true" tabindex="-1"></a><span class="fu">## Size by Group</span></span>
+<span id="cb32-70"><a href="#cb32-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-71"><a href="#cb32-71" aria-hidden="true" tabindex="-1"></a>The size of the points can be mapped to a variable to add another dimension to the plot.</span>
+<span id="cb32-72"><a href="#cb32-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-75"><a href="#cb32-75" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-76"><a href="#cb32-76" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-77"><a href="#cb32-77" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, y<span class="op">=</span><span class="st">"total_bill"</span>, size<span class="op">=</span><span class="st">"size"</span>) <span class="op">+</span> geom_point()</span>
+<span id="cb32-78"><a href="#cb32-78" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-79"><a href="#cb32-79" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-80"><a href="#cb32-80" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-81"><a href="#cb32-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-82"><a href="#cb32-82" aria-hidden="true" tabindex="-1"></a><span class="fu"># Line Plot</span></span>
+<span id="cb32-83"><a href="#cb32-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-84"><a href="#cb32-84" aria-hidden="true" tabindex="-1"></a>A line plot is suitable for showing the trend of a variable over time.</span>
+<span id="cb32-85"><a href="#cb32-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-88"><a href="#cb32-88" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-89"><a href="#cb32-89" aria-hidden="true" tabindex="-1"></a>dowjones <span class="op">=</span> sns.load_dataset(<span class="st">"dowjones"</span>)</span>
+<span id="cb32-90"><a href="#cb32-90" aria-hidden="true" tabindex="-1"></a>dowjones.head()</span>
+<span id="cb32-91"><a href="#cb32-91" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-92"><a href="#cb32-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-95"><a href="#cb32-95" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-96"><a href="#cb32-96" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-97"><a href="#cb32-97" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>dowjones) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"Date"</span>, y<span class="op">=</span><span class="st">"Price"</span>) <span class="op">+</span> geom_line()</span>
+<span id="cb32-98"><a href="#cb32-98" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-99"><a href="#cb32-99" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-100"><a href="#cb32-100" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-101"><a href="#cb32-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-102"><a href="#cb32-102" aria-hidden="true" tabindex="-1"></a><span class="fu">## Line Plot with Dots</span></span>
+<span id="cb32-103"><a href="#cb32-103" aria-hidden="true" tabindex="-1"></a>You can also add markers to the line plot to highlight the data points.</span>
+<span id="cb32-106"><a href="#cb32-106" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-107"><a href="#cb32-107" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-108"><a href="#cb32-108" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>dowjones) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"Date"</span>, y<span class="op">=</span><span class="st">"Price"</span>) <span class="op">+</span> geom_line() <span class="op">+</span> geom_point()</span>
+<span id="cb32-109"><a href="#cb32-109" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-110"><a href="#cb32-110" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-111"><a href="#cb32-111" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-112"><a href="#cb32-112" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-115"><a href="#cb32-115" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-116"><a href="#cb32-116" aria-hidden="true" tabindex="-1"></a><span class="co">#| code-fold: true</span></span>
+<span id="cb32-117"><a href="#cb32-117" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb32-118"><a href="#cb32-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-119"><a href="#cb32-119" aria-hidden="true" tabindex="-1"></a><span class="co"># Create datasets for comparison</span></span>
+<span id="cb32-120"><a href="#cb32-120" aria-hidden="true" tabindex="-1"></a>dowjones2 <span class="op">=</span> dowjones.copy()</span>
+<span id="cb32-121"><a href="#cb32-121" aria-hidden="true" tabindex="-1"></a>dowjones2[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'old'</span></span>
+<span id="cb32-122"><a href="#cb32-122" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-123"><a href="#cb32-123" aria-hidden="true" tabindex="-1"></a>dowjones3 <span class="op">=</span> dowjones.copy()</span>
+<span id="cb32-124"><a href="#cb32-124" aria-hidden="true" tabindex="-1"></a>dowjones3[<span class="st">'Price'</span>] <span class="op">=</span> dowjones3[<span class="st">'Price'</span>] <span class="op">+</span> random.random() <span class="op">*</span> <span class="dv">200</span></span>
+<span id="cb32-125"><a href="#cb32-125" aria-hidden="true" tabindex="-1"></a>dowjones3[<span class="st">'type'</span>] <span class="op">=</span> <span class="st">'new'</span></span>
+<span id="cb32-126"><a href="#cb32-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-127"><a href="#cb32-127" aria-hidden="true" tabindex="-1"></a>dowjones4 <span class="op">=</span> pd.concat([dowjones2, dowjones3], ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb32-128"><a href="#cb32-128" aria-hidden="true" tabindex="-1"></a>dowjones4 <span class="op">=</span> dowjones4.sort_values(<span class="st">'Date'</span>).reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb32-129"><a href="#cb32-129" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-130"><a href="#cb32-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-133"><a href="#cb32-133" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-134"><a href="#cb32-134" aria-hidden="true" tabindex="-1"></a>dowjones4.head()</span>
+<span id="cb32-135"><a href="#cb32-135" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-136"><a href="#cb32-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-137"><a href="#cb32-137" aria-hidden="true" tabindex="-1"></a><span class="fu">## Color by Group</span></span>
+<span id="cb32-138"><a href="#cb32-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-139"><a href="#cb32-139" aria-hidden="true" tabindex="-1"></a>You can plot multiple lines on the same plot to compare different groups.</span>
+<span id="cb32-140"><a href="#cb32-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-143"><a href="#cb32-143" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-144"><a href="#cb32-144" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-145"><a href="#cb32-145" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>dowjones4) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"Date"</span>, y<span class="op">=</span><span class="st">"Price"</span>) <span class="op">+</span> geom_line(aes(color<span class="op">=</span><span class="st">"type"</span>))</span>
+<span id="cb32-146"><a href="#cb32-146" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-147"><a href="#cb32-147" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-148"><a href="#cb32-148" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-149"><a href="#cb32-149" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-150"><a href="#cb32-150" aria-hidden="true" tabindex="-1"></a><span class="fu"># Histogram</span></span>
+<span id="cb32-151"><a href="#cb32-151" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-152"><a href="#cb32-152" aria-hidden="true" tabindex="-1"></a>A histogram visualizes the distribution of a single continuous variable.</span>
+<span id="cb32-153"><a href="#cb32-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-156"><a href="#cb32-156" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-157"><a href="#cb32-157" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-158"><a href="#cb32-158" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>) <span class="op">+</span> geom_histogram()</span>
+<span id="cb32-159"><a href="#cb32-159" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-160"><a href="#cb32-160" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-161"><a href="#cb32-161" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-162"><a href="#cb32-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-163"><a href="#cb32-163" aria-hidden="true" tabindex="-1"></a><span class="fu">## Color by Group</span></span>
+<span id="cb32-164"><a href="#cb32-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-165"><a href="#cb32-165" aria-hidden="true" tabindex="-1"></a>You can create separate histograms for different groups to compare their distributions.</span>
+<span id="cb32-166"><a href="#cb32-166" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-169"><a href="#cb32-169" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-170"><a href="#cb32-170" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-171"><a href="#cb32-171" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, fill<span class="op">=</span><span class="st">'sex'</span>) <span class="op">+</span> geom_histogram(position<span class="op">=</span><span class="st">'dodge'</span>)</span>
+<span id="cb32-172"><a href="#cb32-172" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-173"><a href="#cb32-173" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-174"><a href="#cb32-174" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-175"><a href="#cb32-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-176"><a href="#cb32-176" aria-hidden="true" tabindex="-1"></a><span class="fu"># Bar Chart</span></span>
+<span id="cb32-177"><a href="#cb32-177" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-178"><a href="#cb32-178" aria-hidden="true" tabindex="-1"></a>A bar chart is used to display categorical data with bars of lengths proportional to the values they represent.</span>
+<span id="cb32-179"><a href="#cb32-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-182"><a href="#cb32-182" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-183"><a href="#cb32-183" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-184"><a href="#cb32-184" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">'sex'</span>, y<span class="op">=</span><span class="st">'tip'</span>, fill<span class="op">=</span><span class="st">"sex"</span>) <span class="op">+</span> geom_col()</span>
+<span id="cb32-185"><a href="#cb32-185" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-186"><a href="#cb32-186" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-187"><a href="#cb32-187" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-188"><a href="#cb32-188" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-189"><a href="#cb32-189" aria-hidden="true" tabindex="-1"></a><span class="fu"># Box Plot</span></span>
+<span id="cb32-190"><a href="#cb32-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-191"><a href="#cb32-191" aria-hidden="true" tabindex="-1"></a>A box plot shows the distribution of a dataset, including the median, quartiles, and potential outliers.</span>
+<span id="cb32-192"><a href="#cb32-192" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-195"><a href="#cb32-195" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-196"><a href="#cb32-196" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-197"><a href="#cb32-197" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">'day'</span>, y<span class="op">=</span><span class="st">'tip'</span>, fill<span class="op">=</span><span class="st">"day"</span>) <span class="op">+</span> geom_boxplot()</span>
+<span id="cb32-198"><a href="#cb32-198" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-199"><a href="#cb32-199" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-200"><a href="#cb32-200" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-201"><a href="#cb32-201" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-202"><a href="#cb32-202" aria-hidden="true" tabindex="-1"></a><span class="fu">## Color by Group</span></span>
+<span id="cb32-203"><a href="#cb32-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-204"><a href="#cb32-204" aria-hidden="true" tabindex="-1"></a>You can group box plots by a categorical variable to compare distributions.</span>
+<span id="cb32-205"><a href="#cb32-205" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-208"><a href="#cb32-208" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-209"><a href="#cb32-209" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-210"><a href="#cb32-210" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">'day'</span>, y<span class="op">=</span><span class="st">'tip'</span>, fill<span class="op">=</span><span class="st">"sex"</span>) <span class="op">+</span> geom_boxplot()</span>
+<span id="cb32-211"><a href="#cb32-211" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-212"><a href="#cb32-212" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-213"><a href="#cb32-213" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-214"><a href="#cb32-214" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-215"><a href="#cb32-215" aria-hidden="true" tabindex="-1"></a><span class="fu"># Strip Plot</span></span>
+<span id="cb32-216"><a href="#cb32-216" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-217"><a href="#cb32-217" aria-hidden="true" tabindex="-1"></a>A strip plot is a scatter plot for a categorical variable, showing the distribution of data points.</span>
+<span id="cb32-218"><a href="#cb32-218" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-221"><a href="#cb32-221" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-222"><a href="#cb32-222" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-223"><a href="#cb32-223" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">'day'</span>, y<span class="op">=</span><span class="st">'tip'</span>) <span class="op">+</span> geom_jitter(width<span class="op">=</span><span class="fl">0.1</span>)</span>
+<span id="cb32-224"><a href="#cb32-224" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-225"><a href="#cb32-225" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-226"><a href="#cb32-226" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-227"><a href="#cb32-227" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-228"><a href="#cb32-228" aria-hidden="true" tabindex="-1"></a><span class="fu">## Color by Group</span></span>
+<span id="cb32-229"><a href="#cb32-229" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-230"><a href="#cb32-230" aria-hidden="true" tabindex="-1"></a>You can color the points in a strip plot to distinguish between different groups.</span>
+<span id="cb32-231"><a href="#cb32-231" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-234"><a href="#cb32-234" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-235"><a href="#cb32-235" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-236"><a href="#cb32-236" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">'day'</span>, y<span class="op">=</span><span class="st">'tip'</span>, fill<span class="op">=</span><span class="st">"sex"</span>) <span class="op">+</span> geom_jitter(position<span class="op">=</span>position_jitterdodge())</span>
+<span id="cb32-237"><a href="#cb32-237" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-238"><a href="#cb32-238" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-239"><a href="#cb32-239" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-240"><a href="#cb32-240" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-241"><a href="#cb32-241" aria-hidden="true" tabindex="-1"></a><span class="fu"># Facet Plot</span></span>
+<span id="cb32-242"><a href="#cb32-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-243"><a href="#cb32-243" aria-hidden="true" tabindex="-1"></a>Facet plots create subplots for different subsets of the data, allowing for easy comparison.</span>
+<span id="cb32-244"><a href="#cb32-244" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-247"><a href="#cb32-247" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-248"><a href="#cb32-248" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-249"><a href="#cb32-249" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, y<span class="op">=</span><span class="st">"total_bill"</span>) <span class="op">+</span> geom_point(aes(color<span class="op">=</span><span class="st">"sex"</span>))</span>
+<span id="cb32-250"><a href="#cb32-250" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_wrap(<span class="st">"day"</span>)</span>
+<span id="cb32-251"><a href="#cb32-251" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-252"><a href="#cb32-252" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-253"><a href="#cb32-253" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-254"><a href="#cb32-254" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-255"><a href="#cb32-255" aria-hidden="true" tabindex="-1"></a><span class="fu">## Three Plots per Row</span></span>
+<span id="cb32-256"><a href="#cb32-256" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-257"><a href="#cb32-257" aria-hidden="true" tabindex="-1"></a>You can control the layout of the facet grid by specifying the number of columns.</span>
+<span id="cb32-258"><a href="#cb32-258" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-261"><a href="#cb32-261" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-262"><a href="#cb32-262" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-263"><a href="#cb32-263" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, y<span class="op">=</span><span class="st">"total_bill"</span>) <span class="op">+</span> geom_point(aes(color<span class="op">=</span><span class="st">"sex"</span>))</span>
+<span id="cb32-264"><a href="#cb32-264" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> facet_wrap(<span class="st">"day"</span>, ncol<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb32-265"><a href="#cb32-265" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-266"><a href="#cb32-266" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-267"><a href="#cb32-267" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-268"><a href="#cb32-268" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-269"><a href="#cb32-269" aria-hidden="true" tabindex="-1"></a><span class="fu"># Customizing Title, Size, and Axis Names</span></span>
+<span id="cb32-270"><a href="#cb32-270" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-271"><a href="#cb32-271" aria-hidden="true" tabindex="-1"></a><span class="fu">## Add Title</span></span>
+<span id="cb32-272"><a href="#cb32-272" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-273"><a href="#cb32-273" aria-hidden="true" tabindex="-1"></a>You can add a title to your plot to provide context.</span>
+<span id="cb32-274"><a href="#cb32-274" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-277"><a href="#cb32-277" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-278"><a href="#cb32-278" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-279"><a href="#cb32-279" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, fill<span class="op">=</span><span class="st">'sex'</span>) <span class="op">+</span> geom_histogram(position<span class="op">=</span><span class="st">'dodge'</span>) <span class="op">+</span> ggtitle(<span class="st">"Tip by Sex"</span>)</span>
+<span id="cb32-280"><a href="#cb32-280" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-281"><a href="#cb32-281" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-282"><a href="#cb32-282" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-283"><a href="#cb32-283" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-284"><a href="#cb32-284" aria-hidden="true" tabindex="-1"></a><span class="fu">## Adjust Size</span></span>
+<span id="cb32-285"><a href="#cb32-285" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-286"><a href="#cb32-286" aria-hidden="true" tabindex="-1"></a>The size of the plot can be customized to fit your needs.</span>
+<span id="cb32-287"><a href="#cb32-287" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-290"><a href="#cb32-290" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-291"><a href="#cb32-291" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-292"><a href="#cb32-292" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, fill<span class="op">=</span><span class="st">'sex'</span>) <span class="op">+</span> geom_histogram(position<span class="op">=</span><span class="st">'dodge'</span>) <span class="op">+</span> ggtitle(<span class="st">"Tip by Sex"</span>) <span class="op">+</span> theme(figure_size<span class="op">=</span>(<span class="dv">4</span>, <span class="dv">3</span>))</span>
+<span id="cb32-293"><a href="#cb32-293" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-294"><a href="#cb32-294" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-295"><a href="#cb32-295" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-296"><a href="#cb32-296" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-297"><a href="#cb32-297" aria-hidden="true" tabindex="-1"></a><span class="fu">## Change Axis Names</span></span>
+<span id="cb32-298"><a href="#cb32-298" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-299"><a href="#cb32-299" aria-hidden="true" tabindex="-1"></a>You can change the labels of the x and y axes for clarity.</span>
+<span id="cb32-300"><a href="#cb32-300" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-303"><a href="#cb32-303" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-304"><a href="#cb32-304" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-305"><a href="#cb32-305" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, y<span class="op">=</span><span class="st">"total_bill"</span>) <span class="op">+</span> geom_point() <span class="op">+</span> scale_x_continuous(name<span class="op">=</span><span class="st">"New X Name"</span>) <span class="op">+</span> scale_y_continuous(name<span class="op">=</span><span class="st">"New Y Name"</span>)</span>
+<span id="cb32-306"><a href="#cb32-306" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-307"><a href="#cb32-307" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-308"><a href="#cb32-308" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-309"><a href="#cb32-309" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-310"><a href="#cb32-310" aria-hidden="true" tabindex="-1"></a><span class="fu"># Applying Themes</span></span>
+<span id="cb32-311"><a href="#cb32-311" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-312"><a href="#cb32-312" aria-hidden="true" tabindex="-1"></a>Plotnine offers several built-in themes to change the appearance of your plots. You can find all themes <span class="co">[</span><span class="ot">here</span><span class="co">](https://github.com/has2k1/plotnine/tree/main/plotnine/themes)</span>.</span>
+<span id="cb32-313"><a href="#cb32-313" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-314"><a href="#cb32-314" aria-hidden="true" tabindex="-1"></a>::: {.panel-tabset .nav-pills}</span>
+<span id="cb32-315"><a href="#cb32-315" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-316"><a href="#cb32-316" aria-hidden="true" tabindex="-1"></a><span class="fu">## xkcd Theme</span></span>
+<span id="cb32-317"><a href="#cb32-317" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-318"><a href="#cb32-318" aria-hidden="true" tabindex="-1"></a>This theme gives your plots a hand-drawn, xkcd-style look.</span>
+<span id="cb32-319"><a href="#cb32-319" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-322"><a href="#cb32-322" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-323"><a href="#cb32-323" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-324"><a href="#cb32-324" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, fill<span class="op">=</span><span class="st">'sex'</span>) <span class="op">+</span> geom_histogram(position<span class="op">=</span><span class="st">'dodge'</span>) <span class="op">+</span> theme_xkcd()</span>
+<span id="cb32-325"><a href="#cb32-325" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-326"><a href="#cb32-326" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-327"><a href="#cb32-327" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-328"><a href="#cb32-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-329"><a href="#cb32-329" aria-hidden="true" tabindex="-1"></a><span class="fu">## theme_538</span></span>
+<span id="cb32-330"><a href="#cb32-330" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-331"><a href="#cb32-331" aria-hidden="true" tabindex="-1"></a>This theme mimics the style of the FiveThirtyEight website.</span>
+<span id="cb32-332"><a href="#cb32-332" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-335"><a href="#cb32-335" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-336"><a href="#cb32-336" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-337"><a href="#cb32-337" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, fill<span class="op">=</span><span class="st">'sex'</span>) <span class="op">+</span> geom_histogram(position<span class="op">=</span><span class="st">'dodge'</span>) <span class="op">+</span> theme_538()</span>
+<span id="cb32-338"><a href="#cb32-338" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-339"><a href="#cb32-339" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-340"><a href="#cb32-340" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-341"><a href="#cb32-341" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-342"><a href="#cb32-342" aria-hidden="true" tabindex="-1"></a><span class="fu">## theme_dark</span></span>
+<span id="cb32-343"><a href="#cb32-343" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-344"><a href="#cb32-344" aria-hidden="true" tabindex="-1"></a>This theme uses a dark background for a modern look.</span>
+<span id="cb32-345"><a href="#cb32-345" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-348"><a href="#cb32-348" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-349"><a href="#cb32-349" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-350"><a href="#cb32-350" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, fill<span class="op">=</span><span class="st">'sex'</span>) <span class="op">+</span> geom_histogram(position<span class="op">=</span><span class="st">'dodge'</span>) <span class="op">+</span> theme_dark()</span>
+<span id="cb32-351"><a href="#cb32-351" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-352"><a href="#cb32-352" aria-hidden="true" tabindex="-1"></a>p</span>
+<span id="cb32-353"><a href="#cb32-353" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-354"><a href="#cb32-354" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-355"><a href="#cb32-355" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb32-356"><a href="#cb32-356" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-357"><a href="#cb32-357" aria-hidden="true" tabindex="-1"></a><span class="fu"># Saving a Plot</span></span>
+<span id="cb32-358"><a href="#cb32-358" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-359"><a href="#cb32-359" aria-hidden="true" tabindex="-1"></a>You can save your plot to a file in various formats.</span>
+<span id="cb32-360"><a href="#cb32-360" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-363"><a href="#cb32-363" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-364"><a href="#cb32-364" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb32-365"><a href="#cb32-365" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>tips) <span class="op">+</span> aes(x<span class="op">=</span><span class="st">"tip"</span>, fill<span class="op">=</span><span class="st">'sex'</span>) <span class="op">+</span> geom_histogram(position<span class="op">=</span><span class="st">'dodge'</span>) <span class="op">+</span> theme_dark()</span>
+<span id="cb32-366"><a href="#cb32-366" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-367"><a href="#cb32-367" aria-hidden="true" tabindex="-1"></a>p.save(filename<span class="op">=</span><span class="st">'test3.png'</span>)</span>
+<span id="cb32-368"><a href="#cb32-368" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-369"><a href="#cb32-369" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-370"><a href="#cb32-370" aria-hidden="true" tabindex="-1"></a><span class="fu"># Animated Plot</span></span>
+<span id="cb32-371"><a href="#cb32-371" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-372"><a href="#cb32-372" aria-hidden="true" tabindex="-1"></a>Plotnine can also be used to create animated plots.</span>
+<span id="cb32-373"><a href="#cb32-373" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-376"><a href="#cb32-376" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-377"><a href="#cb32-377" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.animation <span class="im">import</span> PlotnineAnimation</span>
+<span id="cb32-378"><a href="#cb32-378" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-379"><a href="#cb32-379" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-382"><a href="#cb32-382" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-383"><a href="#cb32-383" aria-hidden="true" tabindex="-1"></a><span class="co">#| output: false</span></span>
+<span id="cb32-384"><a href="#cb32-384" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> dowjones4.sample(<span class="dv">50</span>, random_state<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb32-385"><a href="#cb32-385" aria-hidden="true" tabindex="-1"></a>new_data <span class="op">=</span> new_data.sort_values(by<span class="op">=</span>[<span class="st">'Date'</span>], ascending<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb32-386"><a href="#cb32-386" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-387"><a href="#cb32-387" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot(x):</span>
+<span id="cb32-388"><a href="#cb32-388" aria-hidden="true" tabindex="-1"></a>    df2 <span class="op">=</span> dowjones4.query(<span class="st">'Date &lt;= @x'</span>)</span>
+<span id="cb32-389"><a href="#cb32-389" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> (</span>
+<span id="cb32-390"><a href="#cb32-390" aria-hidden="true" tabindex="-1"></a>        ggplot(df2, aes(x<span class="op">=</span><span class="st">'Date'</span>, y<span class="op">=</span><span class="st">'Price'</span>))</span>
+<span id="cb32-391"><a href="#cb32-391" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> geom_line(aes(color<span class="op">=</span><span class="st">"type"</span>))</span>
+<span id="cb32-392"><a href="#cb32-392" aria-hidden="true" tabindex="-1"></a>        <span class="op">+</span> theme(subplots_adjust<span class="op">=</span>{<span class="st">'right'</span>: <span class="fl">0.85</span>})</span>
+<span id="cb32-393"><a href="#cb32-393" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb32-394"><a href="#cb32-394" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
+<span id="cb32-395"><a href="#cb32-395" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-396"><a href="#cb32-396" aria-hidden="true" tabindex="-1"></a>plots <span class="op">=</span> (plot(i) <span class="cf">for</span> i <span class="kw">in</span> new_data[<span class="st">"Date"</span>])</span>
+<span id="cb32-397"><a href="#cb32-397" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-398"><a href="#cb32-398" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-401"><a href="#cb32-401" aria-hidden="true" tabindex="-1"></a><span class="in">```{python}</span></span>
+<span id="cb32-402"><a href="#cb32-402" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> rc</span>
+<span id="cb32-403"><a href="#cb32-403" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-404"><a href="#cb32-404" aria-hidden="true" tabindex="-1"></a>rc(<span class="st">"animation"</span>, html<span class="op">=</span><span class="st">"html5"</span>)</span>
+<span id="cb32-405"><a href="#cb32-405" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-406"><a href="#cb32-406" aria-hidden="true" tabindex="-1"></a>animation <span class="op">=</span> PlotnineAnimation(plots, interval<span class="op">=</span><span class="dv">300</span>, repeat_delay<span class="op">=</span><span class="dv">500</span>)</span>
+<span id="cb32-407"><a href="#cb32-407" aria-hidden="true" tabindex="-1"></a>animation</span>
+<span id="cb32-408"><a href="#cb32-408" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb32-409"><a href="#cb32-409" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-410"><a href="#cb32-410" aria-hidden="true" tabindex="-1"></a><span class="fu"># Reference</span></span>
+<span id="cb32-411"><a href="#cb32-411" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-412"><a href="#cb32-412" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="co">[</span><span class="ot">Plotnine Official Documentation</span><span class="co">](https://plotnine.org/)</span></span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p>This website is built with ❤️ and <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

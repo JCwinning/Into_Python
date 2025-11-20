@@ -1,0 +1,27 @@
+---
+title: "Statistics Books"
+execute:
+  warning: false
+  error: false
+format:
+  html:
+    toc: true
+    toc-location: right
+    code-fold: show
+    code-tools: true
+    number-sections: true
+    code-block-bg: true
+    code-block-border-left: "#31BAE9"
+---
+
+# Naked Statistics
+
+by Charles Wheelan
+
+![](images/51rHcg145LL._SL1200_.jpg){width="400"}
+
+# Storytelling with Data
+
+by Cole Nussbaumer Knaflic
+
+![](images/71EN1l+uQKL._SL1500_.jpg){width="400"}

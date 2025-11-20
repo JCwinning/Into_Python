@@ -1,0 +1,798 @@
+---
+title: "Data manipulation with Pandas"
+author: "Tony Duan"
+
+execute:
+  warning: false
+  error: false
+format:
+  html:
+    toc: true
+    toc-location: right
+    code-fold: show
+    code-tools: true
+    number-sections: true
+    code-block-bg: true
+    code-block-border-left: "#31BAE9"
+---
+
+
+![](images/Pandas_logo.svg.png){width="600"}
+
+
+# Set Up Python:
+
+
+
+```{r}
+#Sys.setenv(RETICULATE_PYTHON = "/Library/Frameworks/Python.framework/Versions/3.11/bin/python3.11")
+library(reticulate)
+py_require(c('pandas','pandasql','matplotlib','seaborn'))
+#use_python("/Library/Frameworks/Python.framework/Versions/3.11/bin/python3.11")
+```
+
+```{r}
+repl_python()
+```
+
+```{python}
+from platform import python_version
+print(python_version())
+```
+
+
+
+
+
+
+
+pandas is a fast, powerful, flexible and easy to use open source data analysis and manipulation tool,
+built on top of the Python programming language.
+
+
+
+Show package's dependencies
+
+```{python}
+# Import the os module
+import os
+# Import pkg_resources from pip._vendor to get package information
+from pip._vendor import pkg_resources
+# Define the package name
+_package_name = 'pandas'
+# Get the package object
+_package = pkg_resources.working_set.by_key[_package_name]
+# Print the dependencies of the package
+print([str(r) for r in _package.requires()])  # retrieve deps from setup.py
+```
+
+# Install Package
+
+```{python}
+#| eval: false
+!pip3.11 install seaborn pandasql nbformat nbclient
+```
+
+# Load Package
+```{python}
+# Import the pandas library, commonly aliased as pd
+import pandas as pd
+# Import sqldf from pandasql for SQL-like queries on pandas DataFrames
+from pandasql import sqldf
+# Import numpy for numerical operations, commonly aliased as np
+import numpy as np
+# Import matplotlib.pylab for plotting, commonly aliased as plt
+import matplotlib.pylab as plt
+# Import seaborn for statistical data visualization
+import seaborn as sns
+
+```
+
+
+
+```{r}
+mtcars=mtcars
+```
+
+
+```{python}
+# Assign the R dataset mtcars to a pandas DataFrame named mtcars
+mtcars=r.mtcars
+```
+
+```{python}
+# Display the first 5 rows of the mtcars DataFrame
+mtcars.head(5)
+```
+
+
+## Row Name to Column
+
+```{python}
+# Set the name of the index to 'newhead'
+mtcars.index.name = 'newhead'
+# Reset the index of the DataFrame, making the old index a new column
+mtcars.reset_index(inplace=True)
+```
+
+```{python}
+# Display the first 5 rows of the mtcars DataFrame after index manipulation
+mtcars.head(5)
+```
+
+
+```{python}
+# Create a new DataFrame small_mtcars with selected columns and the first 5 rows
+small_mtcars = mtcars[["cyl", "mpg",'hp']]
+small_mtcars=small_mtcars.head(5)
+small_mtcars
+```
+
+
+## Get Info on the Data
+
+```{python}
+# Print a concise summary of the small_mtcars DataFrame, including data types and non-null values
+small_mtcars.info()
+```
+
+
+
+# Select Columns
+
+## Get Column Names
+
+```{python}
+# Get a list of column names from the small_mtcars DataFrame
+list(small_mtcars)
+```
+
+## Select by Name
+
+::: panel-tabset
+
+### pandas
+```{python}
+# Select specific columns ('cyl', 'mpg', 'hp') from the small_mtcars DataFrame
+small_mtcars [["cyl", "mpg",'hp']]
+```
+
+Alternative method:
+
+```{python}
+# Select columns by providing a list of items to keep
+small_mtcars.filter(items=['cyl', 'mpg','hp'])
+```
+
+
+:::
+
+### Select Columns by Name Matching with 'p'
+
+```{python}
+# Select columns where the column name contains the letter 'p'
+small_mtcars.loc[:,small_mtcars.columns.str.contains("p")]
+```
+
+Alternative method:
+
+```{python}
+# Select columns whose names match the regular expression 'p.*' (starts with 'p')
+small_mtcars.filter(regex='p.*', axis=1)
+```
+
+
+### Select Columns by Index
+
+#### Select First and 3rd Columns
+```{python}
+# Select rows at index 0 and 2 (first and third rows)
+small_mtcars.iloc[[0,2]]
+```
+
+
+#### Select First to 3rd Columns
+
+```{python}
+# Select rows from index 0 up to (but not including) index 3
+small_mtcars[0:3]
+```
+
+# Drop Column
+
+::: panel-tabset
+
+## pandas
+
+```{python}
+# Drop the column named 'cyl' from the DataFrame (axis=1 indicates column)
+small_mtcars.drop('cyl', axis=1)
+```
+
+
+::: 
+
+# Renaming Columns
+
+::: panel-tabset
+
+## pandas
+
+```{python}
+# Rename columns 'mpg' to 'new_name_mpg' and 'cyl' to 'new_name_cyl'
+small_mtcars.rename(columns={'mpg':"new_name_mpg", 'cyl':'new_name_cyl'})
+```
+
+
+
+
+::: 
+
+
+# Create Column
+
+::: panel-tabset
+
+## pandas
+```{python}
+
+# Create a new column 'mpg2' by adding 1 to the 'mpg' column
+small_mtcars['mpg2'] = small_mtcars['mpg']+1
+
+# Create a new column 'mpg3'. If 'mpg' is greater than 20, assign 'long', otherwise 'short'
+small_mtcars['mpg3']  = np.where(small_mtcars['mpg']> 20, "long", "short")
+
+# Create a new column 'mpg4' with nested np.where conditions for categorical assignment
+small_mtcars['mpg4'] =np.where(small_mtcars["mpg"]<19, "short",
+                   np.where(small_mtcars["mpg"]<=22, "Medium",
+                   np.where(small_mtcars["mpg"]>22, "long","else")))
+
+# Display the DataFrame with the new columns
+small_mtcars
+```
+
+
+
+:::
+
+
+
+# Transmute: Create Column and Only Keep This Column
+
+```{python}
+# Create a new column 'mpg2' by adding 1 to the 'mpg' column
+small_mtcars['mpg2'] = small_mtcars['mpg']+1
+
+# Create a new DataFrame containing only the 'mpg2' column
+new_data=small_mtcars[['mpg2']]
+
+# Display the new DataFrame
+new_data
+```
+
+
+
+
+## Filter Rows
+
+```{python}
+# Filter rows where the 'gear' column is equal to 4
+mtcars[(mtcars['gear'] ==4)]
+```
+
+Alternative method:
+```{python}
+# Filter rows where the 'gear' column is equal to 4 using the query method
+mtcars.query('gear==4')
+```
+
+### Filters with AND Conditions
+
+```{python}
+
+# Filter rows where 'cyl' is greater than 4 AND 'gear' is equal to 5
+mtcars[(mtcars['cyl'] >4)&(mtcars['gear'] ==5) ]
+
+```
+Alternative method:
+```{python}
+# Filter rows where 'cyl' is greater than 4 AND 'gear' is equal to 5 using the query method
+mtcars.query('cyl>4 and gear==5')
+```
+
+### Filters with OR Conditions
+
+
+```{python}
+# Filter rows where 'cyl' is equal to 6 OR 'gear' is equal to 5
+mtcars[(mtcars['cyl'] ==6) |(mtcars['gear'] ==5) ]
+```
+
+Alternative method:
+```{python}
+# Filter rows where 'cyl' is equal to 6 OR 'gear' is equal to 5 using the query method
+mtcars.query('cyl==6 or gear==5')
+```
+
+
+### Filter Rows by Index
+
+#### 5th Row
+```{python}
+
+# Select the row at index 4 (which is the 5th row)
+mtcars.iloc[[4]]
+```
+
+#### 1st and 5th Rows
+```{python}
+
+# Select rows at index 0 (1st row) and 4 (5th row)
+mtcars.iloc[[0,4]]
+```
+
+#### 1st to 5th Rows
+```{python}
+
+# Select rows from index 0 up to (but not including) index 4
+mtcars.iloc[0:4]
+```
+#### Get Random 5 Rows
+
+```{python}
+# Select 5 random rows from the mtcars DataFrame, with a fixed random_state for reproducibility
+mtcars.sample(5, random_state=42)
+```
+
+
+## Append
+
+
+### Append by Row
+
+
+```{python}
+# using pandas
+
+# get 1 to 4 rows
+data1=mtcars.iloc[0:4]
+
+# get 9 rows
+data2=mtcars.iloc[10:11]
+
+# Concatenate data1 and data2 DataFrames by row, ignoring the original index
+data3=pd.concat([data1, data2], ignore_index = True,axis=0)
+
+# Display the concatenated DataFrame
+data3
+```
+
+
+### Append by Column
+
+
+
+```{python}
+# using pandas
+# Select 'cyl' and 'mpg' columns from small_mtcars
+data1=small_mtcars[["cyl", "mpg"]]
+
+# Select 'hp' column from small_mtcars
+data2=small_mtcars[['hp']]
+
+# Concatenate data1 and data2 DataFrames by column, and reindex to match data2's index
+data3=pd.concat([data1, data2], axis=1).reindex(data2.index)
+
+# Display the concatenated DataFrame
+data3
+```
+
+
+### Dropping NA values
+
+Missing values (NaN) can be handled by either removing rows/columns with missing data or by filling them with appropriate values.
+
+#### Drop Rows with Any NA Values
+
+```python
+# Create a sample DataFrame with missing values
+df_missing = pd.DataFrame({
+    'A': [1, 2, np.nan, 4],
+    'B': [5, np.nan, np.nan, 8],
+    'C': [9, 10, 11, 12]
+})
+print("Original DataFrame:")
+print(df_missing)
+
+# Drop rows that contain any NaN values
+df_dropped_all = df_missing.dropna()
+print("\nDataFrame after dropping rows with any NA:")
+print(df_dropped_all)
+```
+
+#### Drop Rows with NAs in Specific Columns
+
+```python
+# Drop rows that have NaN values in column 'A'
+df_dropped_col_a = df_missing.dropna(subset=['A'])
+print("\nDataFrame after dropping rows with NA in column 'A':")
+print(df_dropped_col_a)
+```
+
+### Filling NA values
+
+Missing values can be filled with a specific value, the mean, median, or previous/next valid observation.
+
+#### Fill with a Specific Value
+
+```python
+# Fill all NaN values with 0
+df_filled_zero = df_missing.fillna(0)
+print("\nDataFrame after filling NA with 0:")
+print(df_filled_zero)
+```
+
+#### Fill with Mean of the Column
+
+```python
+# Fill NaN values in column 'B' with the mean of column 'B'
+df_filled_mean = df_missing.copy()
+df_filled_mean['B'] = df_filled_mean['B'].fillna(df_filled_mean['B'].mean())
+print("\nDataFrame after filling NA in column 'B' with its mean:")
+print(df_filled_mean)
+```
+
+#### Forward fill (ffill)
+
+```python
+# Forward fill NaN values (propagate last valid observation forward to next valid observation)
+df_ffill = df_missing.fillna(method='ffill')
+print("\nDataFrame after forward fill:")
+print(df_ffill)
+```
+
+#### Backward fill (bfill)
+
+```python
+# Backward fill NaN values (propagate next valid observation backward to next valid observation)
+df_bfill = df_missing.fillna(method='bfill')
+print("\nDataFrame after backward fill:")
+print(df_bfill)
+```
+
+
+
+## Group By
+
+
+### Average, Min, Max, Sum
+
+```{python}
+# Group the mtcars DataFrame by the 'cyl' column and calculate the mean of the 'hp' column for each group
+mtcars.groupby("cyl")["hp"].mean()
+```
+
+```{python}
+# Group the mtcars DataFrame by the 'cyl' column and find the minimum value of the 'hp' column for each group
+mtcars.groupby("cyl")["hp"].min()
+```
+
+```{python}
+# Group the mtcars DataFrame by the 'cyl' column and find the maximum value of the 'hp' column for each group
+mtcars.groupby("cyl")["hp"].max()
+```
+
+
+```{python}
+# Group the mtcars DataFrame by the 'cyl' column and calculate the sum of the 'hp' column for each group
+mtcars.groupby("cyl")["hp"].sum()
+```
+
+### Count Records and Count Distinct Records
+
+```{python}
+
+# Group the mtcars DataFrame by the 'cyl' column and count the number of non-null 'hp' values for each group
+mtcars.groupby("cyl")["hp"].count()
+
+```
+
+
+```{python}
+
+# Group the mtcars DataFrame by the 'cyl' column and count the number of unique 'hp' values for each group
+mtcars.groupby("cyl")["hp"].nunique()
+```
+
+
+## Order Rows
+
+```{python}
+# Sort the small_mtcars DataFrame by the 'hp' column in ascending order
+small_mtcars.sort_values('hp')
+```
+
+### Sort in Descending Order
+
+```{python}
+# Sort the small_mtcars DataFrame by the 'hp' column in descending order
+small_mtcars.sort_values('hp',ascending=False)
+```
+
+### Arrange by Multiple Variables
+
+
+```{python}
+# Sort the small_mtcars DataFrame by 'cyl' then by 'mpg' in ascending order
+small_mtcars.sort_values(by=['cyl','mpg'])
+```
+## Join
+
+```{python}
+
+# Create a DataFrame named lhs
+lhs = pd.DataFrame({'id': [1,2,3], 'val': ['lhs.1', 'lhs.2', 'lhs.3']})
+# Create a DataFrame named rhs
+rhs = pd.DataFrame({'id': [1,2,4], 'val': ['rhs.1', 'rhs.2', 'rhs.3']})
+```
+
+
+```{python}
+# Display the lhs DataFrame
+lhs
+```
+
+```{python}
+# Display the rhs DataFrame
+rhs
+```
+
+
+### Inner Join
+
+```{python}
+# Perform an inner merge of lhs and rhs DataFrames on the 'id' column
+result=pd.merge(lhs, rhs, on='id', how='inner')
+# Display the result
+result
+```
+
+
+### Full Join
+
+```{python}
+# Perform a full outer merge of lhs and rhs DataFrames on the 'id' column
+result=pd.merge(lhs, rhs, on='id', how='outer')
+# Display the result
+result
+```
+
+
+
+### Left Join 
+
+```{python}
+# Perform a left merge of lhs and rhs DataFrames on the 'id' column
+result=pd.merge(lhs, rhs, on='id', how='left')
+# Display the result
+result
+```
+
+
+
+
+
+
+
+## Reshape Tables
+
+
+```{python}
+# Create a DataFrame named costs
+costs = pd.DataFrame({
+    'id': [1,2],
+    'price_x': [.1, .2],
+    'price_y': [.4, .5],
+    'price_z': [.7, .8]
+})
+
+# Display the DataFrame
+costs
+```
+
+
+### Gather Data Long (Wide to Long)
+
+```{python}
+# selecting each variable manually
+# Melt the costs DataFrame from wide to long format
+long_date=pd.melt(costs,id_vars=['id'], value_vars=['price_x', 'price_y','price_z'])
+
+# Display the long format DataFrame
+long_date
+#costs >> gather('measure', 'value', _.price_x, _.price_y, _.price_z)
+```
+
+
+### Spread Data Wide (Long to Wide)
+
+
+```{python}
+# Pivot the long_date DataFrame from long to wide format
+long_date.pivot(index="id", columns="variable", values="value")
+```
+
+
+
+
+## String Operations
+
+```{python}
+
+# Create a DataFrame named df with 'text' and 'num' columns
+df = pd.DataFrame({'text': ['abc', 'DDD','1243c','aeEe'], 'num': [3, 4,7,8]})
+
+# Display the DataFrame
+df
+```
+
+### Upper Case
+
+```python
+# Convert the 'text' column to uppercase
+df['text'].str.upper()
+```
+
+### Lower Case
+
+```python
+# Convert the 'text' column to lowercase
+df['text'].str.lower()
+```
+
+### Match
+
+```python
+# Check if the 'text' column contains 'a'
+df['text'].str.contains('a')
+```
+
+### Concatenation
+
+```python
+# Concatenate the 'text' column with itself, separated by a space
+df['text'] + " " + df['text']
+```
+
+### Replace
+
+```python
+# Replace 'a' with 'X' in the 'text' column
+df['text'].str.replace('a', 'X')
+```
+
+
+### Regular Expression
+
+https://regex101.com/
+
+
+```{python}
+# Import the re module for regular expressions
+import re
+
+# Example string
+text = "The rain in Spain falls mainly in the plain. My email is example@email.com"
+print(text)
+print("")
+
+print("Regular expression to find all words ending with 'ain'")
+# Define a regex pattern to find words ending with 'ain'
+pattern1 = r'\b\w*ain\b'
+# Find all matches of pattern1 in the text
+matches1 = re.findall(pattern1, text)
+print("Words ending with 'ain':", matches1)
+print("")
+
+print("Regular expression to extract an email address")
+# Define a regex pattern to extract email addresses
+pattern2 = r"[\w\.-]+@[\w\.-]+"
+# Find all matches of pattern2 in the text
+matches2 = re.findall(pattern2, text)
+print("Email addresses found:", matches2)
+print("")
+
+print("Replace all 'ain' endings with 'ANE'")
+# Replace all occurrences of 'ain' at the end of a word with 'ANE'
+replaced_text = re.sub(r'ain\b', 'ANE', text)
+print("Text after replacement:", replaced_text)
+print("")
+```
+
+
+
+
+
+
+
+### Extract
+
+Use str.extract() with a regular expression to pull out a matching piece of text.
+
+For example the regular expression “^(.*) ” contains the following pieces:
+
+-  a matches the literal letter “a”
+
+- .* has a . which matches anything, and * which modifies it to apply 0 or more times.
+
+
+
+
+
+## Date Operations
+
+Pandas provides powerful tools for working with dates and times, including converting to datetime objects, extracting components, and formatting.
+
+```{python}
+# Create a DataFrame with 'dates' and 'raw' columns
+df_dates = pd.DataFrame({
+    "dates": pd.to_datetime(["2021-01-02", "2021-02-03"]),
+    "raw": ["2023-04-05 06:07:08", "2024-05-06 07:08:09"],
+})
+# Display the DataFrame
+df_dates
+```
+
+### Extracting Date Components
+
+You can extract various components like year, month, day, hour, minute, second from datetime objects.
+
+```python
+# Extract year, month, and day from the 'dates' column
+df_dates['dates'].dt.year
+df_dates['dates'].dt.month
+df_dates['dates'].dt.day
+```
+
+### Formatting Dates
+
+Dates can be formatted into different string representations using `strftime()`.
+
+```python
+# Format the 'dates' column as YYYY-MM-DD
+df_dates['dates'].dt.strftime('%Y-%m-%d')
+```
+
+
+
+```{python}
+# Print a concise summary of the df_dates DataFrame
+df_dates.info()
+```
+
+
+
+## DataFrame to NumPy Array
+
+```{python}
+# Convert the df_dates DataFrame to a NumPy array
+df_dates.to_numpy()
+```
+
+
+
+
+# References
+
+https://pandas.pydata.org/docs/user_guide
+
+
+
+
+```{python}
+#| eval: false
+#| include: false
+
+This is a hidden code chunk
+```
+

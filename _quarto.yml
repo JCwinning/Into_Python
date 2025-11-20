@@ -1,0 +1,96 @@
+project:
+  type: website
+  output-dir: docs
+
+
+language: 
+  search-box-placeholder: Search
+
+    
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: true
+    grid:
+      sidebar-width: 300px
+      body-width: 1000px
+      margin-width: 200px
+      gutter-width: 1rem
+
+
+
+website:
+  back-to-top-navigation: true
+  reader-mode: true
+
+  
+  title: "Python Handbook"
+
+  favicon: "download.jpg"
+  navbar:
+    logo: "download.jpg"
+    left:
+      - text: "Home"
+        file: index.qmd
+      - sidebar:intro
+      - sidebar:bar0  
+      - sidebar:bar1
+      - sidebar:bar2
+      - sidebar:bar7
+
+  sidebar:
+
+    - id: intro
+      title: "intro"
+      style: "floating"
+      background: light
+      collapse-level: 2
+      contents: intro
+
+
+    - id: bar0
+      title: "Data"
+      style: "floating"
+      background: light
+      collapse-level: 2
+      contents: data manipulation
+
+
+
+    - id: bar1
+      title: "Plotting"
+      style: "floating"
+      background: light
+      collapse-level: 2
+      contents: plot
+
+
+    - id: bar2
+      title: "Publish"
+      style: "floating"
+      background: light
+      collapse-level: 2
+      contents: Publish
+
+
+    - id: bar7
+      title: "Other"
+      style: "floating"
+      background: light
+      collapse-level: 3
+      contents: other
+
+
+
+  page-footer:
+    right: "This website is built with ❤️ and [Quarto](https://quarto.org/)."
+
+
+
+
+execute:
+  freeze: auto
+
+filters:
+  - foldableCodeBlock.lua

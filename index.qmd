@@ -1,0 +1,44 @@
+---
+title: "Python Data Science Handbook"
+---
+
+Welcome to the **Python Data Science Handbook**! This comprehensive online resource guides you through Python for data science, from basic concepts to advanced techniques, all built with Quarto.
+
+## 📚 What You'll Learn
+
+The handbook covers five main areas:
+
+-   **Introduction**: Master Python fundamentals, installation, and essential programming concepts with clear examples
+-   **Data Manipulation**: Deep dive into pandas, NumPy, SQL databases, and efficient data processing techniques
+-   **Plotting**: Create stunning visualizations with seaborn, plotnine, and plotly for data storytelling
+-   **Publishing**: Share your work through interactive dashboards, web applications, and reproducible reports
+-   **Other**: Explore web scraping, advanced tools, and practical applications
+
+## 🎯 Learning Path
+
+### For Beginners
+1. Start with **Basic Python** to understand programming fundamentals
+2. Learn **Data Structures** to organize your information
+3. Master **File I/O Operations** to work with external data
+
+### For Data Analysts
+4. Study **Pandas** for data manipulation and analysis
+5. Explore **SQL Databases** for structured data handling
+6. Learn **Data Visualization** with Seaborn and Plotly
+
+### For Advanced Users
+7. Discover **Web Scraping** techniques for data collection
+8. Build **Interactive Applications** with Shiny
+9. Master **Advanced Topics** and best practices
+
+## 🚀 Getting Started
+
+Use the sidebar navigation to explore topics at your own pace. Each section builds on the previous ones, but you can also jump directly to areas of interest.
+
+## 📖 Additional Resources
+
+- **Python Books**: Curated list of essential reading materials
+- **Statistics Books**: Recommended resources for data science concepts
+- **Data Books**: Specialized literature for data analysis
+
+Happy learning! 🚀

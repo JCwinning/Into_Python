@@ -1,0 +1,12 @@
+{
+  "hash": "83fe20d898ca61a60da9c3cca7ab5a17",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"shiny in Python introduction\"\nauthor: \"Tony Duan\"\nexecute:\n  warning: false\n  error: false\n\n  \nformat:\n  html:\n    toc: true\n    toc-location: right\n    code-fold: show\n    code-tools: true\n    \n    code-block-bg: true\n    code-block-border-left: \"#31BAE9\"\n    code-copy: true\n\n\nfilters:\n  - shinylive\n  \n---\n\n::: {#191e9255 .cell execution_count=1}\n``` {.python .cell-code}\npip install shiny\n```\n:::\n\n\n# if using shinylive(shiny without server) then install extension in your Quarto project\n\n::: {#137c8d7c .cell execution_count=2}\n``` {.python .cell-code}\nquarto add quarto-ext/shinylive\n```\n:::\n\n\n# Add filters in YAML header\n\n````\n---\n\nfilters:\n  - shinylive\n  \n---\n````\n\n# Shiny code\n\n````\n\n```{shinylive-python}\n#| standalone: true\n\nfrom shiny import *\n\napp_ui = ui.page_fluid(\n    ui.input_slider(\"n\", \"N\", 0, 100, 40),\n    ui.output_text_verbatim(\"txt\"),\n)\n\n\ndef server(input, output, session):\n    @output\n    @render.text\n    def txt():\n        return f\"The value of n*2 is {input.n() * 2}\"\n\napp = App(app_ui, server)\n```\n\n````\n\n```{shinylive-python}\n#| standalone: true\n\nfrom shiny import *\n\napp_ui = ui.page_fluid(\n    ui.input_slider(\"n\", \"N\", 0, 100, 40),\n    ui.output_text_verbatim(\"txt\"),\n)\n\n\ndef server(input, output, session):\n    @output\n    @render.text\n    def txt():\n        return f\"The value of n*2 is {input.n() * 2}\"\n\napp = App(app_ui, server)\n```\n\n\n\n\n# Reference\n\nhttps://shiny.posit.co/py/get-started/shinylive.html\n\n",
+    "supporting": [
+      "shiny intro_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

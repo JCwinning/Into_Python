@@ -1,0 +1,347 @@
+---
+title: "SQL database with python"
+author: "Tony Duan"
+
+execute:
+  warning: false
+  error: false
+format:
+  html:
+    toc: true
+    toc-location: right
+    code-fold: show
+    code-tools: true
+    number-sections: true
+    code-block-bg: true
+    code-block-border-left: "#31BAE9"
+---
+
+![](images/1594917913096.png){width="600"}
+
+# Connection with database
+
+```{python}
+# Import seaborn for loading sample datasets
+import seaborn as sns
+# Import pandas for data manipulation
+import pandas as pd
+# Import sqlite3 for SQLite database interaction
+import sqlite3
+
+# Load the 'tips' dataset from seaborn
+tips = sns.load_dataset("tips")
+# Load the 'planets' dataset from seaborn
+planets=sns.load_dataset('planets')
+```
+
+## create database file pythonsqlite.db and copy tips data and planets data into database
+
+```{python}
+#| eval: false
+# Import the sqlite3 module
+import sqlite3
+# Create a connection to the SQLite database file 'pythonsqlite.db'
+db = sqlite3.connect('pythonsqlite.db')
+
+# Write the 'tips' DataFrame to a SQL table named 'tips', replacing it if it already exists
+tips.to_sql(name='tips', con=db,if_exists='replace')
+# Write the 'planets' DataFrame to a SQL table named 'planets', replacing it if it already exists
+planets.to_sql(name='planets', con=db,if_exists='replace')
+
+# Close the database connection
+db.close()
+```
+
+## check all table in database
+
+```{python}
+# Connect to the SQLite database file 'pythonsqlite.db'
+db = sqlite3.connect('pythonsqlite.db')
+# Execute an SQL query to select table names from sqlite_master and read into a pandas DataFrame
+table = pd.read_sql_query("SELECT name FROM sqlite_master WHERE type='table';", db)
+# Display the DataFrame
+table
+
+```
+
+# SQL
+
+## select
+
+```{python}
+# Connect to the SQLite database
+db = sqlite3.connect('pythonsqlite.db')
+# Define an SQL query to select all columns from the 'tips' table, limiting to 3 rows
+sql="select * from tips LIMIT 3;"
+# Execute the SQL query and read the result into a pandas DataFrame
+table = pd.read_sql_query(sql,db)
+# Display the DataFrame
+table
+```
+
+## Renaming column
+
+```{python}
+# Define an SQL query to select 'total_bill' and alias it as 'new_total_bill'
+sql="select total_bill as new_total_bill from tips"
+# Execute the SQL query and read the result into a pandas DataFrame
+table = pd.read_sql_query(sql,db)
+# Display the first 5 rows of the DataFrame
+table.head()
+```
+
+## create column
+
+```{python}
+# Define an SQL query to select 'total_bill' as 'new_total_bill' and also the original 'total_bill'
+sql="select total_bill as new_total_bill,total_bill from tips"
+# Execute the SQL query and read the result into a pandas DataFrame
+table = pd.read_sql_query(sql,db)
+# Display the first 5 rows of the DataFrame
+table.head()
+```
+
+## Filter rows
+
+```{python}
+# Define an SQL query to select all columns from 'tips' where 'sex' is 'Male'
+sql="select * from tips where sex='Male'"
+# Execute the SQL query and read the result into a pandas DataFrame
+table = pd.read_sql_query(sql,db)
+# Display the first 5 rows of the DataFrame
+table.head()
+```
+
+### Filters with AND conditions
+
+```{python}
+# Define an SQL query to select all columns from 'tips' where 'sex' is 'Male' AND 'size' is greater than 3
+sql="select * from tips where sex='Male' and size>3"
+# Execute the SQL query and read the result into a pandas DataFrame
+table = pd.read_sql_query(sql,db)
+# Display the first 5 rows of the DataFrame
+table.head()
+```
+
+### Filters with or conditions
+
+```{python}
+# Define an SQL query to select all columns from 'tips' where 'sex' is 'Male' OR 'size' is greater than 3
+sql="select * from tips where sex='Male' or size>3"
+# Execute the SQL query and read the result into a pandas DataFrame
+table = pd.read_sql_query(sql,db)
+# Display the shape of the DataFrame (number of rows, number of columns)
+table.shape
+```
+
+## Append
+
+### append by row
+
+```{python}
+# Define an SQL query to union all rows from 'tips' with itself
+sql="select * from tips UNION all select * from tips"
+# Execute the SQL query and read the result into a pandas DataFrame
+table = pd.read_sql_query(sql,db)
+# Display the shape of the DataFrame
+table.shape
+```
+
+### append by column
+
+### Dropping NA values
+
+### keep NA values
+
+## group by
+
+### average,min,max,sum
+
+```{python}
+# Define an SQL query to calculate the average, minimum, maximum, and sum of 'total_bill' grouped by 'sex'
+sql="select AVG(total_bill),min(total_bill),max(total_bill),sum(total_bill) from tips group by sex"
+# Execute the SQL query and read the result into a pandas DataFrame
+table = pd.read_sql_query(sql,db)
+# Display the DataFrame
+table
+```
+
+### count
+
+```{python}
+# Define an SQL query to count records grouped by 'sex'
+sql="select sex,count(*) from tips group by 1"
+# Execute the SQL query and read the result into a pandas DataFrame
+table = pd.read_sql_query(sql,db)
+# Display the DataFrame
+table
+```
+
+## order rows
+
+```{python}
+# Define an SQL query to select all columns from 'tips' and order by 'total_bill' in ascending order
+sql="select * from tips order by total_bill"
+# Execute the SQL query and read the result into a pandas DataFrame
+table = pd.read_sql_query(sql,db)
+# Display the first 5 rows of the DataFrame
+table.head()
+```
+
+### Sort in descending order
+
+```{python}
+# Define an SQL query to select all columns from 'tips' and order by 'total_bill' in descending order
+sql="select * from tips order by total_bill desc"
+# Execute the SQL query and read the result into a pandas DataFrame
+table = pd.read_sql_query(sql,db)
+# Display the first 5 rows of the DataFrame
+table.head()
+```
+
+### Arrange by multiple variables
+
+```{python}
+# Define an SQL query to select all columns from 'tips' and order by 'total_bill' then by 'tip'
+sql="select * from tips order by total_bill,tip"
+# Execute the SQL query and read the result into a pandas DataFrame
+table = pd.read_sql_query(sql,db)
+# Display the first 5 rows of the DataFrame
+table.head()
+```
+
+## join
+
+Joining tables is a fundamental operation in SQL, allowing you to combine rows from two or more tables based on a related column between them. Here are common types of joins:
+
+### inner_join
+
+An INNER JOIN returns only the rows that have matching values in both tables.
+
+```python
+# Create sample DataFrames for demonstration
+lhs_df = pd.DataFrame({'id': [1,2,3], 'val': ['lhs.1', 'lhs.2', 'lhs.3']})
+rhs_df = pd.DataFrame({'id': [1,2,4], 'val': ['rhs.1', 'rhs.2', 'rhs.3']})
+
+# Perform an INNER JOIN using pandas merge
+inner_join_result = pd.merge(lhs_df, rhs_df, on='id', how='inner')
+print("Inner Join Result:")
+print(inner_join_result)
+```
+
+### full join
+
+A FULL OUTER JOIN returns all rows when there is a match in one of the tables. If there are no matches, it returns NULL values for columns from the table that doesn't have a match.
+
+```python
+# Perform a FULL OUTER JOIN using pandas merge
+full_join_result = pd.merge(lhs_df, rhs_df, on='id', how='outer')
+print("\nFull Outer Join Result:")
+print(full_join_result)
+```
+
+### left join
+
+A LEFT JOIN (or LEFT OUTER JOIN) returns all rows from the left table, and the matching rows from the right table. If there is no match from the right table, NULL values are used.
+
+```python
+# Perform a LEFT JOIN using pandas merge
+left_join_result = pd.merge(lhs_df, rhs_df, on='id', how='left')
+print("\nLeft Join Result:")
+print(left_join_result)
+```
+
+### anti join
+
+An ANTI JOIN returns rows from the left table that have no matching rows in the right table.
+
+```python
+# Perform an ANTI JOIN (rows in lhs_df not in rhs_df)
+anti_join_result = lhs_df[~lhs_df['id'].isin(rhs_df['id'])]
+print("\nAnti Join Result (lhs_df not in rhs_df):")
+print(anti_join_result)
+```
+
+## Reshape tables
+
+
+### Gather data long(wide to long)
+
+### Spread data wide (long to wide)
+
+## string
+
+### upper case
+
+### lower case
+
+### match
+
+### concatenation
+
+### replace
+
+### extract
+
+## date
+
+
+
+
+## create table into database
+
+```{python}
+# Define an SQL query to create a new table named 'new_tips' if it doesn't already exist, copying data from 'tips'
+sql="create table if not exists new_tips as select * from tips"
+# Execute the SQL query
+db.execute(sql)
+
+# Execute an SQL query to select table names from sqlite_master and read into a pandas DataFrame
+table = pd.read_sql_query("SELECT name FROM sqlite_master WHERE type='table';", db)
+# Display the DataFrame
+table
+```
+
+## delete table in database
+
+```{python}
+# Define an SQL query to drop the table named 'new_tips' if it exists
+sql="drop table if  exists new_tips"
+# Execute the SQL query
+db.execute(sql)
+
+# Execute an SQL query to select table names from sqlite_master and read into a pandas DataFrame
+table = pd.read_sql_query("SELECT name FROM sqlite_master WHERE type='table';", db)
+# Display the DataFrame
+table
+```
+## edit table in database
+
+
+
+```{python}
+# Close the database connection
+db.close()
+```
+
+# Using SQL with Pandas
+
+```{python}
+# Import the sqldf function from the pandasql library
+from pandasql import sqldf
+```
+
+```{python}
+# Define an SQL query to select the first 5 rows from the 'tips' table
+sql="SELECT * FROM tips LIMIT 5;"
+# Execute the SQL query on the 'tips' DataFrame and store the result in 'data'
+data=sqldf(sql)
+# Display the resulting DataFrame
+data
+```
+
+
+
+
+
+# reference:

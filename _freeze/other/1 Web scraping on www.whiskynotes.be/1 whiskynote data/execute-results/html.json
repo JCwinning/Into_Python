@@ -1,0 +1,12 @@
+{
+  "hash": "cb4b37c1b820ed1b771f54ae15981a53",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"Whiskynotes.be data\"\nauthor: \"Tony Duan\"\n\nexecute:\n  warning: false\n  error: false\n\nformat:\n  html:\n    toc: true\n    toc-location: right\n    code-fold: show\n    code-tools: true\n    number-sections: true\n    code-block-bg: true\n    code-block-border-left: \"#31BAE9\"\n---\n\n# whiskynotes.be data\n\n<https://www.whiskynotes.be/>\n\n![](images/clipboard-2598102391.png)\n\nWhiskyNotes is a personal collection of impressions, written while searching for the ultimate single malt whisky. A work in progress, and a continuous exercise for the senses.\n\nI started it in 2008 while living in Spain for a couple of years. I had discovered whisky a few years earlier but suddenly I was cut off from festivals, shops and whisky friends in my home country. A whisky blog seemed a good way of keeping in touch. It quickly gained a following, first in Belgium but now from all over the world.\n\n# BeautifulSoup package\n\n![](https://miro.medium.com/v2/resize:fit:1200/1*muxhw09mECD24fZqJXKH1A.jpeg){width=\"500\"}\n\nBeautiful Soup is a Python library for pulling data out of HTML and XML files. It works with your favorite parser to provide idiomatic ways of navigating, searching, and modifying the parse tree. It commonly saves programmers hours or days of work.\n\n::: {#9b6f328d .cell execution_count=1}\n``` {.python .cell-code}\nimport requests\nimport os\nfrom bs4 import BeautifulSoup\nimport pandas as pd\nimport time\n```\n:::\n\n\n::: {#492b455e .cell execution_count=2}\n``` {.python .cell-code}\nos.system('pip show beautifulsoup4')\n```\n\n::: {.cell-output .cell-output-stdout}\n```\nName: beautifulsoup4\nVersion: 4.13.3\nSummary: Screen-scraping library\nHome-page: https://www.crummy.com/software/BeautifulSoup/bs4/\nAuthor: \nAuthor-email: Leonard Richardson <leonardr@segfault.org>\nLicense: MIT License\nLocation: /Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/site-packages\nRequires: soupsieve, typing-extensions\nRequired-by: nbconvert\n```\n:::\n\n::: {.cell-output .cell-output-display execution_count=2}\n```\n0\n```\n:::\n:::\n\n\n# reference:\n\n",
+    "supporting": [
+      "1 whiskynote data_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

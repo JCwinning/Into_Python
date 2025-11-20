@@ -1,0 +1,12 @@
+{
+  "hash": "dd82a303e41ba7bb854969f0b29da3d3",
+  "result": {
+    "engine": "jupyter",
+    "markdown": "---\ntitle: \"One year page review\"\nsubtitle: \"with whiskynote.be data\"\nauthor: \"Tony Duan\"\n\nexecute:\n  warning: false\n  error: false\n  eval: false\nformat:\n  html:\n    toc: true\n    toc-location: right\n    code-fold: show\n    code-tools: true\n    number-sections: true\n    code-block-bg: true\n    code-block-border-left: \"#31BAE9\"\n---\n\n::: {#fa7ad965 .cell execution_count=1}\n``` {.python .cell-code}\nimport requests\nimport os\nfrom bs4 import BeautifulSoup\nimport pandas as pd\nimport time\n```\n:::\n\n\n::: {#0ccde131 .cell execution_count=2}\n``` {.python .cell-code}\nos.system('pip show beautifulsoup4')\n```\n:::\n\n\nWeb scraping on www.whiskynotes.be\n\n# year page\n\n::: {#c3313cc4 .cell execution_count=3}\n``` {.python .cell-code}\nyear_ur='https://www.whiskynotes.be/2023'\n```\n:::\n\n\n![](images/clipboard-677064128.png)\n\n# read in html\n\n::: {#49504c51 .cell execution_count=4}\n``` {.python .cell-code}\n# Send an HTTP GET request to the website\nheaders = {'User-Agent': 'My User Agent'}\nresponse = requests.get(year_ur,headers=headers)\n```\n:::\n\n\n::: {#6ac83389 .cell execution_count=5}\n``` {.python .cell-code}\n# success code - 200 \nprint(response) \n```\n:::\n\n\n::: {#07f07640 .cell execution_count=6}\n``` {.python .cell-code}\n#print(response.content)\n```\n:::\n\n\n::: {#578631b5 .cell execution_count=7}\n``` {.python .cell-code}\n# Parse the HTML code using BeautifulSoup\nsoup = BeautifulSoup(response.content, 'html.parser')\n```\n:::\n\n\n# review bottle name on one year\n\n::: {#e9388f01 .cell execution_count=8}\n``` {.python .cell-code}\nbottle001=soup.find_all('p')\n```\n:::\n\n\n::: {#606fc111 .cell execution_count=9}\n``` {.python .cell-code}\nfor i in bottle001[1:5]:\n  i.get_text()\n```\n:::\n\n\n# review topic name on one year\n\n::: {#e1fd1df5 .cell execution_count=10}\n``` {.python .cell-code}\ntopic001=soup.select('.archive-link')\n```\n:::\n\n\n::: {#3bc97a9d .cell execution_count=11}\n``` {.python .cell-code}\nfor i in topic001[1:5]:\n  i.get_text()\n```\n:::\n\n\n::: {#4032169b .cell execution_count=12}\n``` {.python .cell-code}\ntopic_link=soup.select('.entry-permalink')\n\nfor link in topic_link[1:5]:\n  link.get('href')\n\n```\n:::\n\n\n# reference:\n\n",
+    "supporting": [
+      "3 whiskynote one year page_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

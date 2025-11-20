@@ -1,0 +1,104 @@
+---
+title: "shiny in Python introduction"
+author: "Tony Duan"
+execute:
+  warning: false
+  error: false
+
+  
+format:
+  html:
+    toc: true
+    toc-location: right
+    code-fold: show
+    code-tools: true
+    
+    code-block-bg: true
+    code-block-border-left: "#31BAE9"
+    code-copy: true
+
+
+filters:
+  - shinylive
+  
+---
+
+
+```{python}
+#| eval: false
+pip install shiny
+```
+
+
+# if using shinylive(shiny without server) then install extension in your Quarto project
+
+```{python}
+#| eval: false
+quarto add quarto-ext/shinylive
+```
+
+
+# Add filters in YAML header
+
+````
+---
+
+filters:
+  - shinylive
+  
+---
+````
+
+# Shiny code
+
+````
+
+```{shinylive-python}
+#| standalone: true
+
+from shiny import *
+
+app_ui = ui.page_fluid(
+    ui.input_slider("n", "N", 0, 100, 40),
+    ui.output_text_verbatim("txt"),
+)
+
+
+def server(input, output, session):
+    @output
+    @render.text
+    def txt():
+        return f"The value of n*2 is {input.n() * 2}"
+
+app = App(app_ui, server)
+```
+
+````
+
+```{shinylive-python}
+#| standalone: true
+
+from shiny import *
+
+app_ui = ui.page_fluid(
+    ui.input_slider("n", "N", 0, 100, 40),
+    ui.output_text_verbatim("txt"),
+)
+
+
+def server(input, output, session):
+    @output
+    @render.text
+    def txt():
+        return f"The value of n*2 is {input.n() * 2}"
+
+app = App(app_ui, server)
+```
+
+
+
+
+# Reference
+
+https://shiny.posit.co/py/get-started/shinylive.html
+
