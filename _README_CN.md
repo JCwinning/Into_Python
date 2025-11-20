@@ -4,7 +4,7 @@
 
 ## 🌐 在线网站
 
-访问手册：[https://jcfly3000.github.io/Into-Python/](https://jcfly3000.github.io/Into-Python/)
+访问手册：[https://jcwinning.github.io/Into_Python/](https://jcwinning.github.io/Into_Python/)
 
 ## 📚 内容概览
 

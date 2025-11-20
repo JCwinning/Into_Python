@@ -4,7 +4,7 @@ A comprehensive online resource for learning Python for data science, built with
 
 ## 🌐 Live Website
 
-Visit the handbook at: [https://jcfly3000.github.io/Into-Python/](https://jcfly3000.github.io/Into-Python/)
+Visit the handbook at: [https://jcwinning.github.io/Into_Python/](https://jcwinning.github.io/Into_Python/)
 
 ## 📚 Content Overview
 
