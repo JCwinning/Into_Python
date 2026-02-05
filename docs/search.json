@@ -516,5 +516,175 @@
       "data manipulation",
       "SQL database with python"
     ]
+  },
+  {
+    "objectID": "plot/3 plotly.html#color-by-group",
+    "href": "plot/3 plotly.html#color-by-group",
+    "title": "Plotly Chart",
+    "section": "2.1 Color by Group",
+    "text": "2.1 Color by Group\nYou can color the points based on a categorical variable to see how the relationship varies across different groups.\n\n\nCode\nfig = px.scatter(tips, x=\"tip\", y=\"total_bill\", color=\"sex\")\nfig.show()",
+    "crumbs": [
+      "Plot",
+      "Plotly Chart"
+    ]
+  },
+  {
+    "objectID": "plot/3 plotly.html#size-by-group",
+    "href": "plot/3 plotly.html#size-by-group",
+    "title": "Plotly Chart",
+    "section": "2.2 Size by Group",
+    "text": "2.2 Size by Group\nThe size of the points can be mapped to a variable to add another dimension to the plot.\n\n\nCode\nfig = px.scatter(tips, x=\"tip\", y=\"total_bill\", size=\"size\")\nfig.show()",
+    "crumbs": [
+      "Plot",
+      "Plotly Chart"
+    ]
+  },
+  {
+    "objectID": "plot/3 plotly.html#line-plot-with-dots",
+    "href": "plot/3 plotly.html#line-plot-with-dots",
+    "title": "Plotly Chart",
+    "section": "3.1 Line Plot with Dots",
+    "text": "3.1 Line Plot with Dots\nYou can also add markers to the line plot to highlight the data points.\n\n\nCode\nimport plotly.express as px\nfig = px.line(dowjones, x=\"Date\", y=\"Price\", markers=True)\nfig.show()",
+    "crumbs": [
+      "Plot",
+      "Plotly Chart"
+    ]
+  },
+  {
+    "objectID": "plot/3 plotly.html#color-by-group-1",
+    "href": "plot/3 plotly.html#color-by-group-1",
+    "title": "Plotly Chart",
+    "section": "3.2 Color by Group",
+    "text": "3.2 Color by Group\nYou can plot multiple lines on the same plot to compare different groups.\n\n\nCode\nimport random\n\n# Create datasets for comparison\ndowjones2 = dowjones.copy()\ndowjones2['type'] = 'old'\n\ndowjones3 = dowjones.copy()\ndowjones3['Price'] = dowjones3['Price'] + random.random() * 200\ndowjones3['type'] = 'new'\n\ndowjones4 = pd.concat([dowjones2, dowjones3], ignore_index=True)\ndowjones4 = dowjones4.sort_values('Date').reset_index(drop=True)\n\n\n\n\nCode\ndowjones4.head()\n\n\n\n\n\n\n\n\n\nDate\nPrice\ntype\n\n\n\n\n0\n1914-12-01\n55.000000\nold\n\n\n1\n1914-12-01\n242.863379\nnew\n\n\n2\n1915-01-01\n244.413379\nnew\n\n\n3\n1915-01-01\n56.550000\nold\n\n\n4\n1915-02-01\n56.000000\nold\n\n\n\n\n\n\n\n\n\nCode\nimport plotly.express as px\nfig = px.line(dowjones4, x=\"Date\", y=\"Price\", color='type')\nfig.show()",
+    "crumbs": [
+      "Plot",
+      "Plotly Chart"
+    ]
+  },
+  {
+    "objectID": "plot/3 plotly.html#color-by-group-2",
+    "href": "plot/3 plotly.html#color-by-group-2",
+    "title": "Plotly Chart",
+    "section": "4.1 Color by Group",
+    "text": "4.1 Color by Group\nYou can create separate histograms for different groups to compare their distributions.\n\n\nCode\nfig = px.histogram(tips, x=\"total_bill\", color='sex', barmode='group')\nfig.show()",
+    "crumbs": [
+      "Plot",
+      "Plotly Chart"
+    ]
+  },
+  {
+    "objectID": "plot/3 plotly.html#color-by-group-3",
+    "href": "plot/3 plotly.html#color-by-group-3",
+    "title": "Plotly Chart",
+    "section": "6.1 Color by Group",
+    "text": "6.1 Color by Group\nYou can group box plots by a categorical variable to compare distributions.\n\n\nCode\nfig = px.box(tips, y=\"total_bill\", x='sex', color='sex')\nfig.show()",
+    "crumbs": [
+      "Plot",
+      "Plotly Chart"
+    ]
+  },
+  {
+    "objectID": "plot/3 plotly.html#color-by-group-4",
+    "href": "plot/3 plotly.html#color-by-group-4",
+    "title": "Plotly Chart",
+    "section": "7.1 Color by Group",
+    "text": "7.1 Color by Group\nYou can color the points in a strip plot to distinguish between different groups.\n\n\nCode\nfig = px.strip(tips, x=\"day\", y=\"total_bill\", color='sex')\nfig.show()",
+    "crumbs": [
+      "Plot",
+      "Plotly Chart"
+    ]
+  },
+  {
+    "objectID": "plot/3 plotly.html#three-plots-per-row",
+    "href": "plot/3 plotly.html#three-plots-per-row",
+    "title": "Plotly Chart",
+    "section": "8.1 Three Plots per Row",
+    "text": "8.1 Three Plots per Row\nYou can control the layout of the facet grid by specifying the number of columns to wrap.\n\n\nCode\nfig = px.scatter(tips, x=\"total_bill\", y=\"tip\", color=\"sex\", facet_col=\"day\", facet_col_wrap=3)\nfig.show()",
+    "crumbs": [
+      "Plot",
+      "Plotly Chart"
+    ]
+  },
+  {
+    "objectID": "plot/3 plotly.html#add-title",
+    "href": "plot/3 plotly.html#add-title",
+    "title": "Plotly Chart",
+    "section": "10.1 Add Title",
+    "text": "10.1 Add Title\nYou can add a title to your plot and center it.\n\n\nCode\nfig = px.scatter(tips, x=\"tip\", y=\"total_bill\", title=\"Total Bill Title\").update_layout(title_x=0.5)\nfig.show()",
+    "crumbs": [
+      "Plot",
+      "Plotly Chart"
+    ]
+  },
+  {
+    "objectID": "plot/3 plotly.html#adjust-size",
+    "href": "plot/3 plotly.html#adjust-size",
+    "title": "Plotly Chart",
+    "section": "10.2 Adjust Size",
+    "text": "10.2 Adjust Size\nThe size of the plot can be customized to fit your needs.\n\n\nCode\nfig = px.scatter(tips, x=\"tip\", y=\"total_bill\")\nfig.update_layout(\n    autosize=False,\n    width=200,\n    height=200\n)\n\n\n                        \n                                            \n\n\nCode\nfig.show()",
+    "crumbs": [
+      "Plot",
+      "Plotly Chart"
+    ]
+  },
+  {
+    "objectID": "plot/3 plotly.html#change-axis-names",
+    "href": "plot/3 plotly.html#change-axis-names",
+    "title": "Plotly Chart",
+    "section": "10.3 Change Axis Names",
+    "text": "10.3 Change Axis Names\nYou can change the labels of the x and y axes for clarity.\n\n\nCode\nfig = px.scatter(tips, x=\"tip\", y=\"total_bill\",\n                 labels={\n                     \"tip\": \"New X Label\",\n                     \"total_bill\": \"New Y Label\"\n                 })\nfig.show()",
+    "crumbs": [
+      "Plot",
+      "Plotly Chart"
+    ]
+  },
+  {
+    "objectID": "CLAUDE.html",
+    "href": "CLAUDE.html",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.\n\n\nThis is a Python Data Science Handbook built with Quarto, serving as a comprehensive educational resource. The project is structured as a Quarto website that renders HTML documentation from QMD (Quarto Markdown) files with embedded Python code.\n\n\n\n\n\n# Preview the website locally (most common development task)\nquarto preview index.qmd --no-browser --no-watch-inputs\n\n# Preview with browser and watch inputs (for live development)\nquarto preview index.qmd\n\n# Render the entire site\nquarto render\n\n# Render specific file\nquarto render path/to/file.qmd\n\n\n\n# Restore deleted content (common issue with sidebar references)\ngit checkout HEAD -- \"directory_name/\"\n\n# Check git status for QMD files\ngit status | grep \"\\.qmd\"\n\n\n\n\n\n\n\nMain config: _quarto.yml defines website structure, sidebars, and themes\nCustom filters: foldableCodeBlock.lua provides collapsible code blocks\nOutput directory: docs/ contains the rendered HTML site\nFreeze cache: _freeze/ stores computational results for faster builds\n\n\n\n\nThe site is organized into logical sections, each with its own directory:\n\nintro/: Basic Python concepts and setup\ndata manipulation/: Pandas, SQL, data structures, I/O operations\nplot/: Visualization libraries (Seaborn, Plotnine, Plotly)\nPublish/: Shiny and Quarto publishing workflows\nother/: Advanced topics like web scraping\n\n\n\n\nThe website uses 5 main sidebars defined in _quarto.yml: - intro: Introduction and basic concepts - bar0 (Data): Data manipulation content - bar1 (Plotting): Visualization libraries - bar2 (Publish): Publishing and sharing - bar7 (Other): Advanced topics and web scraping\n\n\n\n\nAll Python code blocks use {python}` syntax (notpython`)\nCode execution is configured with execute: freeze: auto for caching\nCommon code execution settings in frontmatter:\nexecute:\n  warning: false\n  error: false\n  cache: true\n\n\n\n\n\n\n\n\nQMD files: All content should be in QMD format for Quarto processing\nPython code: Always use ```{python} blocks with proper syntax\nFile references: When directories are referenced in _quarto.yml, they must exist and contain QMD files\nDeleted content: If sidebar references break, restore content with git checkout HEAD\n\n\n\n\n\nReal URLs: Use actual working websites (e.g., books.toscrape.com) not placeholder URLs\nError handling: Include proper exception handling in web scraping examples\nComplete functions: Provide full function implementations, not just function calls\nCommented examples: Use commented code for examples that shouldn’t execute during rendering\n\n\n\n\n\nSidebar errors: If sidebars fail, check that referenced directories contain QMD files\nMissing content: Use git checkout HEAD -- \"directory/\" to restore accidentally deleted content\nLua filter errors: Ensure foldableCodeBlock.lua exists and matches the reference in _quarto.yml\nPython execution errors: Verify all Python code blocks use {python} syntax and have proper imports\n\n\n\n\n\nThe project assumes these Python packages are available: - requests, beautifulsoup4, selenium (web scraping) - pandas, numpy (data manipulation) - matplotlib, seaborn, plotly, plotnine (visualization) - quarto (document rendering)\n\n\n\n\nGitHub Pages: Site deploys to https://jcfly3000.github.io/Into-Python/\nOutput: Built files go to docs/ directory\nTheme: Uses Cosmo theme with custom styling from styles.css"
+  },
+  {
+    "objectID": "CLAUDE.html#project-overview",
+    "href": "CLAUDE.html#project-overview",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "This is a Python Data Science Handbook built with Quarto, serving as a comprehensive educational resource. The project is structured as a Quarto website that renders HTML documentation from QMD (Quarto Markdown) files with embedded Python code."
+  },
+  {
+    "objectID": "CLAUDE.html#essential-commands",
+    "href": "CLAUDE.html#essential-commands",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "# Preview the website locally (most common development task)\nquarto preview index.qmd --no-browser --no-watch-inputs\n\n# Preview with browser and watch inputs (for live development)\nquarto preview index.qmd\n\n# Render the entire site\nquarto render\n\n# Render specific file\nquarto render path/to/file.qmd\n\n\n\n# Restore deleted content (common issue with sidebar references)\ngit checkout HEAD -- \"directory_name/\"\n\n# Check git status for QMD files\ngit status | grep \"\\.qmd\""
+  },
+  {
+    "objectID": "CLAUDE.html#architecture-and-structure",
+    "href": "CLAUDE.html#architecture-and-structure",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "Main config: _quarto.yml defines website structure, sidebars, and themes\nCustom filters: foldableCodeBlock.lua provides collapsible code blocks\nOutput directory: docs/ contains the rendered HTML site\nFreeze cache: _freeze/ stores computational results for faster builds\n\n\n\n\nThe site is organized into logical sections, each with its own directory:\n\nintro/: Basic Python concepts and setup\ndata manipulation/: Pandas, SQL, data structures, I/O operations\nplot/: Visualization libraries (Seaborn, Plotnine, Plotly)\nPublish/: Shiny and Quarto publishing workflows\nother/: Advanced topics like web scraping\n\n\n\n\nThe website uses 5 main sidebars defined in _quarto.yml: - intro: Introduction and basic concepts - bar0 (Data): Data manipulation content - bar1 (Plotting): Visualization libraries - bar2 (Publish): Publishing and sharing - bar7 (Other): Advanced topics and web scraping\n\n\n\n\nAll Python code blocks use {python}` syntax (notpython`)\nCode execution is configured with execute: freeze: auto for caching\nCommon code execution settings in frontmatter:\nexecute:\n  warning: false\n  error: false\n  cache: true"
+  },
+  {
+    "objectID": "CLAUDE.html#development-guidelines",
+    "href": "CLAUDE.html#development-guidelines",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "QMD files: All content should be in QMD format for Quarto processing\nPython code: Always use ```{python} blocks with proper syntax\nFile references: When directories are referenced in _quarto.yml, they must exist and contain QMD files\nDeleted content: If sidebar references break, restore content with git checkout HEAD\n\n\n\n\n\nReal URLs: Use actual working websites (e.g., books.toscrape.com) not placeholder URLs\nError handling: Include proper exception handling in web scraping examples\nComplete functions: Provide full function implementations, not just function calls\nCommented examples: Use commented code for examples that shouldn’t execute during rendering\n\n\n\n\n\nSidebar errors: If sidebars fail, check that referenced directories contain QMD files\nMissing content: Use git checkout HEAD -- \"directory/\" to restore accidentally deleted content\nLua filter errors: Ensure foldableCodeBlock.lua exists and matches the reference in _quarto.yml\nPython execution errors: Verify all Python code blocks use {python} syntax and have proper imports"
+  },
+  {
+    "objectID": "CLAUDE.html#dependencies-and-environment",
+    "href": "CLAUDE.html#dependencies-and-environment",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "The project assumes these Python packages are available: - requests, beautifulsoup4, selenium (web scraping) - pandas, numpy (data manipulation) - matplotlib, seaborn, plotly, plotnine (visualization) - quarto (document rendering)"
+  },
+  {
+    "objectID": "CLAUDE.html#deployment",
+    "href": "CLAUDE.html#deployment",
+    "title": "CLAUDE.md",
+    "section": "",
+    "text": "GitHub Pages: Site deploys to https://jcfly3000.github.io/Into-Python/\nOutput: Built files go to docs/ directory\nTheme: Uses Cosmo theme with custom styling from styles.css"
   }
 ]

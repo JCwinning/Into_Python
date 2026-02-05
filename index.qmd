@@ -1,5 +1,6 @@
 ---
 title: "Python Data Science Handbook"
+author: "Tony Duan"
 ---
 
 Welcome to the **Python Data Science Handbook**! This comprehensive online resource guides you through Python for data science, from basic concepts to advanced techniques, all built with Quarto.

@@ -202,6 +202,114 @@ fig = px.scatter(tips, x="total_bill", y="tip", color="sex", facet_col="day", fa
 fig.show()
 ```
 
+
+# Sankey Diagram
+
+data source:https://abc.xyz/investor/earnings/
+
+```{python}
+import plotly.graph_objects as go
+import pandas as pd
+
+# 1. Nodes Data
+labels = [
+    "Search<br>$63.1B", "YouTube<br>$11.4B", "AdMob<br>$7.8B", # 0, 1, 2
+    "Google Play<br>$13.6B", "Google Cloud<br>$17.7B", "Other<br>$0.3B", # 3, 4, 5
+    "Ad Revenue<br>$82.3B", # 6
+    "Revenue<br>$113.8B", # 7
+    "Gross profit<br>$68.1B", "Cost of revenues<br>($45.8B)", # 8, 9
+    "Operating profit<br>$35.9B", "Operating expenses<br>($32.1B)", # 10, 11
+    "Net profit<br>$34.5B", "Tax<br>($4.7B)", # 12, 13
+    "Other CoR<br>($29.2B)", "TAC<br>($16.6B)", # 14, 15
+    "R&D<br>($18.6B)", "S&M<br>($8.2B)", "G&A<br>($5.3B)", # 16, 17, 18
+    "Other<br>$3.2B" # 19
+]
+
+# 2. Manual Positions (x: 0 is left, 1 is right | y: 0 is top, 1 is bottom)
+x_pos = [
+    0.001, 0.001, 0.001, # Search, YT, AdMob
+    0.001, 0.001, 0.001, # Play, Cloud, Other
+    0.20, # Ad Revenue
+    0.35, # Revenue
+    0.55, 0.55, # Gross, Cost
+    0.75, 0.75, # Op Profit, Op Expenses
+    0.99, 0.99, # Net, Tax
+    0.85, 0.85, # Other CoR, TAC
+    0.99, 0.99, 0.99, # R&D, S&M, G&A
+    0.75 # Other Inc
+]
+
+y_pos = [
+    0.05, 0.20, 0.35, # Search, YT, AdMob (Top-Left)
+    0.55, 0.70, 0.85, # Play, Cloud, Other (Bottom-Left)
+    0.20, # Ad Rev (Merges top three)
+    0.45, # Revenue (Center)
+    0.30, 0.80, # Gross (Top), Cost (Bottom)
+    0.25, 0.65, # Op Prof (Top), Op Ex (Mid)
+    0.20, 0.40, # Net (Top), Tax (Below Net)
+    0.90, 0.80, # Other CoR (Bottom), TAC (Above it)
+    0.55, 0.65, 0.75, # R&D, S&M, G&A
+    0.10 # Other Inc
+]
+
+# 3. Node Colors
+node_colors = [
+    "#4285F4", "#4285F4", "#4285F4", # Sources Blue
+    "#FBBC05", "#FBBC05", "#FBBC05", # Play/Cloud/Other Yellow
+    "#4285F4", # Ad Rev Blue
+    "#4285F4", # Revenue Blue
+    "#34A853", "#EA4335", # Gross Green, Cost Red
+    "#34A853", "#EA4335", # Op Prof Green, Op Ex Red
+    "#34A853", "#EA4335", # Net Green, Tax Red
+    "#EA4335", "#EA4335", # Other CoR, TAC Red
+    "#EA4335", "#EA4335", "#EA4335", # R&D... Red
+    "#34A853" # Other Inc Green
+]
+
+# 4. Links Data Frame
+data = {
+    'source': [0, 1, 2, 6, 3, 4, 5, 7, 7, 9, 9, 8, 8, 11, 11, 11, 10, 10, 19],
+    'target': [6, 6, 6, 7, 7, 7, 7, 9, 8, 15, 14, 11, 10, 16, 17, 18, 12, 13, 12],
+    'value': [63.1, 11.4, 7.8, 82.3, 13.6, 17.7, 0.3, 45.8, 68.1, 16.6, 29.2, 32.1, 35.9, 18.6, 8.2, 5.3, 31.2, 4.7, 3.2],
+    'color': [
+        "rgba(66, 133, 244, 0.4)", "rgba(66, 133, 244, 0.4)", "rgba(66, 133, 244, 0.4)", # -> AdRev
+        "rgba(66, 133, 244, 0.6)", # AdRev -> Rev
+        "rgba(251, 188, 5, 0.4)", "rgba(251, 188, 5, 0.4)", "rgba(251, 188, 5, 0.4)", # -> Rev
+        "rgba(234, 67, 53, 0.4)", "rgba(52, 168, 83, 0.4)", # Rev -> Cost / Gross
+        "rgba(234, 67, 53, 0.4)", "rgba(234, 67, 53, 0.4)", # Cost -> TAC / Other
+        "rgba(234, 67, 53, 0.4)", "rgba(52, 168, 83, 0.4)", # Gross -> OpEx / OpProfit
+        "rgba(234, 67, 53, 0.4)", "rgba(234, 67, 53, 0.4)", "rgba(234, 67, 53, 0.4)", # OpEx -> R&D...
+        "rgba(52, 168, 83, 0.4)", "rgba(234, 67, 53, 0.4)", # OpProfit -> Net / Tax
+        "rgba(52, 168, 83, 0.4)" # OtherInc -> Net
+    ]
+}
+
+df = pd.DataFrame(data)
+
+# 5. Create Figure
+fig = go.Figure(data=[go.Sankey(
+    arrangement = "fixed",
+    node = dict(
+      pad = 15,
+      thickness = 20,
+      line = dict(color = "black", width = 0.5),
+      label = labels,
+      color = node_colors,
+      x = x_pos,
+      y = y_pos
+    ),
+    link = dict(
+      source = df['source'],
+      target = df['target'],
+      value = df['value'],
+      color = df['color']
+    ))])
+
+fig.update_layout(title_text="Alphabet Q4 FY25 Income Statement", title_x=0.5, font_size=10, height=600)
+
+```
+
+
 # Customizing Title, Size, and Axis Names
 
 ## Add Title

@@ -2,13 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.25">
+<meta name="generator" content="quarto-1.8.26">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Tony Duan">
 
-<title>Python Data Science Handbook – Python Handbook</title>
+<title>claude – Python Handbook</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,6 +19,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -39,7 +73,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-e3c2119d5cfbcc469b638e681236dab1.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -97,7 +131,7 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link active" href="./index.html" aria-current="page"> 
+    <a class="nav-link" href="./index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item dropdown ">
@@ -221,99 +255,154 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#what-youll-learn" id="toc-what-youll-learn" class="nav-link active" data-scroll-target="#what-youll-learn">📚 What You’ll Learn</a></li>
-  <li><a href="#learning-path" id="toc-learning-path" class="nav-link" data-scroll-target="#learning-path">🎯 Learning Path</a>
+  <li><a href="#claude.md" id="toc-claude.md" class="nav-link active" data-scroll-target="#claude.md">CLAUDE.md</a>
   <ul class="collapse">
-  <li><a href="#for-beginners" id="toc-for-beginners" class="nav-link" data-scroll-target="#for-beginners">For Beginners</a></li>
-  <li><a href="#for-data-analysts" id="toc-for-data-analysts" class="nav-link" data-scroll-target="#for-data-analysts">For Data Analysts</a></li>
-  <li><a href="#for-advanced-users" id="toc-for-advanced-users" class="nav-link" data-scroll-target="#for-advanced-users">For Advanced Users</a></li>
+  <li><a href="#project-overview" id="toc-project-overview" class="nav-link" data-scroll-target="#project-overview">Project Overview</a></li>
+  <li><a href="#essential-commands" id="toc-essential-commands" class="nav-link" data-scroll-target="#essential-commands">Essential Commands</a>
+  <ul class="collapse">
+  <li><a href="#development-and-preview" id="toc-development-and-preview" class="nav-link" data-scroll-target="#development-and-preview">Development and Preview</a></li>
+  <li><a href="#git-operations" id="toc-git-operations" class="nav-link" data-scroll-target="#git-operations">Git Operations</a></li>
   </ul></li>
-  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">🚀 Getting Started</a></li>
-  <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources">📖 Additional Resources</a></li>
+  <li><a href="#architecture-and-structure" id="toc-architecture-and-structure" class="nav-link" data-scroll-target="#architecture-and-structure">Architecture and Structure</a>
+  <ul class="collapse">
+  <li><a href="#quarto-configuration" id="toc-quarto-configuration" class="nav-link" data-scroll-target="#quarto-configuration">Quarto Configuration</a></li>
+  <li><a href="#content-organization" id="toc-content-organization" class="nav-link" data-scroll-target="#content-organization">Content Organization</a></li>
+  <li><a href="#sidebar-structure" id="toc-sidebar-structure" class="nav-link" data-scroll-target="#sidebar-structure">Sidebar Structure</a></li>
+  <li><a href="#code-execution-pattern" id="toc-code-execution-pattern" class="nav-link" data-scroll-target="#code-execution-pattern">Code Execution Pattern</a></li>
+  </ul></li>
+  <li><a href="#development-guidelines" id="toc-development-guidelines" class="nav-link" data-scroll-target="#development-guidelines">Development Guidelines</a>
+  <ul class="collapse">
+  <li><a href="#file-management" id="toc-file-management" class="nav-link" data-scroll-target="#file-management">File Management</a></li>
+  <li><a href="#code-examples" id="toc-code-examples" class="nav-link" data-scroll-target="#code-examples">Code Examples</a></li>
+  <li><a href="#common-issues-and-solutions" id="toc-common-issues-and-solutions" class="nav-link" data-scroll-target="#common-issues-and-solutions">Common Issues and Solutions</a></li>
+  </ul></li>
+  <li><a href="#dependencies-and-environment" id="toc-dependencies-and-environment" class="nav-link" data-scroll-target="#dependencies-and-environment">Dependencies and Environment</a></li>
+  <li><a href="#deployment" id="toc-deployment" class="nav-link" data-scroll-target="#deployment">Deployment</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
-
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Python Data Science Handbook</h1>
-</div>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
 
 
-<div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Tony Duan </p>
-          </div>
-  </div>
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<p>Welcome to the <strong>Python Data Science Handbook</strong>! This comprehensive online resource guides you through Python for data science, from basic concepts to advanced techniques, all built with Quarto.</p>
-<section id="what-youll-learn" class="level2">
-<h2 class="anchored" data-anchor-id="what-youll-learn">📚 What You’ll Learn</h2>
-<p>The handbook covers five main areas:</p>
+<section id="claude.md" class="level1">
+<h1>CLAUDE.md</h1>
+<p>This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.</p>
+<section id="project-overview" class="level2">
+<h2 class="anchored" data-anchor-id="project-overview">Project Overview</h2>
+<p>This is a Python Data Science Handbook built with Quarto, serving as a comprehensive educational resource. The project is structured as a Quarto website that renders HTML documentation from QMD (Quarto Markdown) files with embedded Python code.</p>
+</section>
+<section id="essential-commands" class="level2">
+<h2 class="anchored" data-anchor-id="essential-commands">Essential Commands</h2>
+<section id="development-and-preview" class="level3">
+<h3 class="anchored" data-anchor-id="development-and-preview">Development and Preview</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Preview the website locally (most common development task)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> preview index.qmd <span class="at">--no-browser</span> <span class="at">--no-watch-inputs</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Preview with browser and watch inputs (for live development)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> preview index.qmd</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Render the entire site</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Render specific file</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> render path/to/file.qmd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="git-operations" class="level3">
+<h3 class="anchored" data-anchor-id="git-operations">Git Operations</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Restore deleted content (common issue with sidebar references)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout HEAD <span class="at">--</span> <span class="st">"directory_name/"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Check git status for QMD files</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status <span class="kw">|</span> <span class="fu">grep</span> <span class="st">"\.qmd"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="architecture-and-structure" class="level2">
+<h2 class="anchored" data-anchor-id="architecture-and-structure">Architecture and Structure</h2>
+<section id="quarto-configuration" class="level3">
+<h3 class="anchored" data-anchor-id="quarto-configuration">Quarto Configuration</h3>
 <ul>
-<li><strong>Introduction</strong>: Master Python fundamentals, installation, and essential programming concepts with clear examples</li>
-<li><strong>Data Manipulation</strong>: Deep dive into pandas, NumPy, SQL databases, and efficient data processing techniques</li>
-<li><strong>Plotting</strong>: Create stunning visualizations with seaborn, plotnine, and plotly for data storytelling</li>
-<li><strong>Publishing</strong>: Share your work through interactive dashboards, web applications, and reproducible reports</li>
-<li><strong>Other</strong>: Explore web scraping, advanced tools, and practical applications</li>
+<li><strong>Main config</strong>: <code>_quarto.yml</code> defines website structure, sidebars, and themes</li>
+<li><strong>Custom filters</strong>: <code>foldableCodeBlock.lua</code> provides collapsible code blocks</li>
+<li><strong>Output directory</strong>: <code>docs/</code> contains the rendered HTML site</li>
+<li><strong>Freeze cache</strong>: <code>_freeze/</code> stores computational results for faster builds</li>
 </ul>
 </section>
-<section id="learning-path" class="level2">
-<h2 class="anchored" data-anchor-id="learning-path">🎯 Learning Path</h2>
-<section id="for-beginners" class="level3">
-<h3 class="anchored" data-anchor-id="for-beginners">For Beginners</h3>
+<section id="content-organization" class="level3">
+<h3 class="anchored" data-anchor-id="content-organization">Content Organization</h3>
+<p>The site is organized into logical sections, each with its own directory:</p>
+<ul>
+<li><strong><code>intro/</code></strong>: Basic Python concepts and setup</li>
+<li><strong><code>data manipulation/</code></strong>: Pandas, SQL, data structures, I/O operations</li>
+<li><strong><code>plot/</code></strong>: Visualization libraries (Seaborn, Plotnine, Plotly)</li>
+<li><strong><code>Publish/</code></strong>: Shiny and Quarto publishing workflows</li>
+<li><strong><code>other/</code></strong>: Advanced topics like web scraping</li>
+</ul>
+</section>
+<section id="sidebar-structure" class="level3">
+<h3 class="anchored" data-anchor-id="sidebar-structure">Sidebar Structure</h3>
+<p>The website uses 5 main sidebars defined in <code>_quarto.yml</code>: - <strong>intro</strong>: Introduction and basic concepts - <strong>bar0</strong> (Data): Data manipulation content - <strong>bar1</strong> (Plotting): Visualization libraries - <strong>bar2</strong> (Publish): Publishing and sharing - <strong>bar7</strong> (Other): Advanced topics and web scraping</p>
+</section>
+<section id="code-execution-pattern" class="level3">
+<h3 class="anchored" data-anchor-id="code-execution-pattern">Code Execution Pattern</h3>
+<ul>
+<li><p>All Python code blocks use <code>{python}` syntax (not</code>python`)</p></li>
+<li><p>Code execution is configured with <code>execute: freeze: auto</code> for caching</p></li>
+<li><p>Common code execution settings in frontmatter:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">execute</span><span class="kw">:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">warning</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">error</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">cache</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+</ul>
+</section>
+</section>
+<section id="development-guidelines" class="level2">
+<h2 class="anchored" data-anchor-id="development-guidelines">Development Guidelines</h2>
+<section id="file-management" class="level3">
+<h3 class="anchored" data-anchor-id="file-management">File Management</h3>
+<ul>
+<li><strong>QMD files</strong>: All content should be in QMD format for Quarto processing</li>
+<li><strong>Python code</strong>: Always use ```<code>{python}</code> blocks with proper syntax</li>
+<li><strong>File references</strong>: When directories are referenced in <code>_quarto.yml</code>, they must exist and contain QMD files</li>
+<li><strong>Deleted content</strong>: If sidebar references break, restore content with <code>git checkout HEAD</code></li>
+</ul>
+</section>
+<section id="code-examples" class="level3">
+<h3 class="anchored" data-anchor-id="code-examples">Code Examples</h3>
+<ul>
+<li><strong>Real URLs</strong>: Use actual working websites (e.g., <code>books.toscrape.com</code>) not placeholder URLs</li>
+<li><strong>Error handling</strong>: Include proper exception handling in web scraping examples</li>
+<li><strong>Complete functions</strong>: Provide full function implementations, not just function calls</li>
+<li><strong>Commented examples</strong>: Use commented code for examples that shouldn’t execute during rendering</li>
+</ul>
+</section>
+<section id="common-issues-and-solutions" class="level3">
+<h3 class="anchored" data-anchor-id="common-issues-and-solutions">Common Issues and Solutions</h3>
 <ol type="1">
-<li>Start with <strong>Basic Python</strong> to understand programming fundamentals</li>
-<li>Learn <strong>Data Structures</strong> to organize your information</li>
-<li>Master <strong>File I/O Operations</strong> to work with external data</li>
-</ol>
-</section>
-<section id="for-data-analysts" class="level3">
-<h3 class="anchored" data-anchor-id="for-data-analysts">For Data Analysts</h3>
-<ol start="4" type="1">
-<li>Study <strong>Pandas</strong> for data manipulation and analysis</li>
-<li>Explore <strong>SQL Databases</strong> for structured data handling</li>
-<li>Learn <strong>Data Visualization</strong> with Seaborn and Plotly</li>
-</ol>
-</section>
-<section id="for-advanced-users" class="level3">
-<h3 class="anchored" data-anchor-id="for-advanced-users">For Advanced Users</h3>
-<ol start="7" type="1">
-<li>Discover <strong>Web Scraping</strong> techniques for data collection</li>
-<li>Build <strong>Interactive Applications</strong> with Shiny</li>
-<li>Master <strong>Advanced Topics</strong> and best practices</li>
+<li><strong>Sidebar errors</strong>: If sidebars fail, check that referenced directories contain QMD files</li>
+<li><strong>Missing content</strong>: Use <code>git checkout HEAD -- "directory/"</code> to restore accidentally deleted content</li>
+<li><strong>Lua filter errors</strong>: Ensure <code>foldableCodeBlock.lua</code> exists and matches the reference in <code>_quarto.yml</code></li>
+<li><strong>Python execution errors</strong>: Verify all Python code blocks use <code>{python}</code> syntax and have proper imports</li>
 </ol>
 </section>
 </section>
-<section id="getting-started" class="level2">
-<h2 class="anchored" data-anchor-id="getting-started">🚀 Getting Started</h2>
-<p>Use the sidebar navigation to explore topics at your own pace. Each section builds on the previous ones, but you can also jump directly to areas of interest.</p>
+<section id="dependencies-and-environment" class="level2">
+<h2 class="anchored" data-anchor-id="dependencies-and-environment">Dependencies and Environment</h2>
+<p>The project assumes these Python packages are available: - requests, beautifulsoup4, selenium (web scraping) - pandas, numpy (data manipulation) - matplotlib, seaborn, plotly, plotnine (visualization) - quarto (document rendering)</p>
 </section>
-<section id="additional-resources" class="level2">
-<h2 class="anchored" data-anchor-id="additional-resources">📖 Additional Resources</h2>
+<section id="deployment" class="level2">
+<h2 class="anchored" data-anchor-id="deployment">Deployment</h2>
 <ul>
-<li><strong>Python Books</strong>: Curated list of essential reading materials</li>
-<li><strong>Statistics Books</strong>: Recommended resources for data science concepts</li>
-<li><strong>Data Books</strong>: Specialized literature for data analysis</li>
+<li><strong>GitHub Pages</strong>: Site deploys to <code>https://jcfly3000.github.io/Into-Python/</code></li>
+<li><strong>Output</strong>: Built files go to <code>docs/</code> directory</li>
+<li><strong>Theme</strong>: Uses Cosmo theme with custom styling from <code>styles.css</code></li>
 </ul>
-<p>Happy learning! 🚀</p>
 
 
+</section>
 </section>
 
 <a onclick="window.scrollTo(0, 0); return false;" role="button" id="quarto-back-to-top"><i class="bi bi-arrow-up"></i> Back to top</a></main> <!-- /main -->
