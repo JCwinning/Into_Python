@@ -285,12 +285,15 @@ data = {
 }
 
 df = pd.DataFrame(data)
+```
 
+
+```{python}
 # 5. Create Figure
 fig = go.Figure(data=[go.Sankey(
     arrangement = "fixed",
     node = dict(
-      pad = 15,
+      pad = 25,
       thickness = 20,
       line = dict(color = "black", width = 0.5),
       label = labels,
@@ -305,7 +308,7 @@ fig = go.Figure(data=[go.Sankey(
       color = df['color']
     ))])
 
-fig.update_layout(title_text="Alphabet Q4 FY25 Income Statement", title_x=0.5, font_size=10, height=600)
+fig.update_layout(title_text="Alphabet Q4 FY25 Income Statement", title_x=0.5, font_size=13, height=500)
 
 ```
 
